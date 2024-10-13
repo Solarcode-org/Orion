@@ -1,0 +1,24 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GRAMMAR_DIR: lib
+  GRAMMAR_FILE: orion.bnf
+
+tasks:
+  grammar:
+    cmd: "cd {{.GRAMMAR_DIR}} && gocc {{.GRAMMAR_FILE}}"
+    silent: true
+
+  dev:
+    deps:
+      - grammar
+    cmd: "go run . ior _examples/main.or -v6"
+    interactive: true
+
+  pre:
+    deps:
+      - grammar
+    cmd: "go run . ior _examples/main.or"
+    interactive: true

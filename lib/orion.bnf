@@ -1,0 +1,50 @@
+/* Lexical elements */
+
+_letter : 'a'-'z' | 'A'-'Z' ;
+
+_digit : '0'-'9' ;
+
+_idchar : _letter | _digit | '_' | '/' ;
+
+id : (_letter | '_') {_idchar} ;
+
+quotedstring : '"' (.) {.} '"' ;
+
+!whitespace : ' ' | '\t' | '\n' | '\r' ;
+
+!comment : _lineComment | _blockComment ;
+
+_lineComment : ';' {.} '\n' ;
+
+_blockComment : '/' 'm' '/' {. | '/'} '/' '/' ;
+
+/* Syntax elements */
+
+<<
+import (
+	"github.com/Solarcode-org/Orion/lib/ast"
+	"github.com/Solarcode-org/Orion/lib/token"
+)
+>>
+
+FuncCallList :
+    FuncCall                  << ast.NewFuncCallList($0) >>
+    | FuncCallList FuncCall   << ast.AppendFuncCall($0, $1) >>
+;
+
+FuncCall :
+      id DataList << ast.NewFuncCall($T0, $1) >>
+;
+
+DataList :
+      Data                    << ast.NewDataList($0) >>
+    | "(" Data ")"            << ast.NewDataList($1) >>
+    | DataList Data           << ast.AppendData($0, $1) >>
+    | DataList "(" Data ")"   << ast.AppendData($0, $2) >>
+;
+
+Data :
+      quotedstring      << ast.NewData($T0, ast.String) >>
+//  | id                << ast.NewData($T0, ast.Ident) >>
+    | "(" FuncCall ")"  << ast.NewFuncData($1) >>
+;

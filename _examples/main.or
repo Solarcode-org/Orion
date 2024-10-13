@@ -1,0 +1,14 @@
+/m/
+In this program we will:
+    * greet the user
+    * ask them how they're doing
+    * say 'hihello'
+//
+
+get "fmt" ; gets the formatting module
+
+print "Hi" "user!" ; greet the user
+
+input "how are you? " ; ask the user about how they're doing
+
+print (join "hi" "hello") ; say 'hihello'
