@@ -141,7 +141,13 @@ var TokMap = TokenMap{
 		"id",
 		"(",
 		")",
+		"let",
+		"=",
+		"get",
+		",",
 		"quotedstring",
+		"int",
+		"float",
 	},
 
 	idMap: map[string]Type{
@@ -150,6 +156,12 @@ var TokMap = TokenMap{
 		"id":           2,
 		"(":            3,
 		")":            4,
-		"quotedstring": 5,
+		"let":          5,
+		"=":            6,
+		"get":          7,
+		",":            8,
+		"quotedstring": 9,
+		"int":          10,
+		"float":        11,
 	},
 }

@@ -12,4 +12,5 @@ func MakeFunctions() {
 
 	add_fmt_mod(Functions)
 	add_modgetter(Functions)
+	add_arithmetic_mod(Functions)
 }

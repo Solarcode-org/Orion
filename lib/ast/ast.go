@@ -24,9 +24,11 @@ type Data struct {
 
 const (
 	Int DataType = iota
+	Float
 	String
 	NoneType
 	FuncCallType
+	Ident
 )
 
 var None = Data{
@@ -47,6 +49,26 @@ func NewFuncCall(funcName *token.Token, funcArgs interface{}) (FuncCall, error) 
 	return FuncCall{
 		Name: string(funcName.Lit),
 		Args: funcArgs.(DataList),
+	}, nil
+}
+
+func NewFuncCallOneArg(funcName *token.Token, funcArgs interface{}) (FuncCall, error) {
+	return FuncCall{
+		Name: string(funcName.Lit),
+		Args: []Data{funcArgs.(Data)},
+	}, nil
+}
+
+func NewFuncCallManyArgs(funcName *token.Token, funcArgs ...interface{}) (FuncCall, error) {
+	args := make(DataList, 0, len(funcArgs))
+
+	for _, arg := range funcArgs {
+		args = append(args, arg.(Data))
+	}
+
+	return FuncCall{
+		Name: string(funcName.Lit),
+		Args: args,
 	}, nil
 }
 

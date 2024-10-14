@@ -12,7 +12,7 @@ func add_modgetter(functions FunctionsType) {
 		for i := 0; i < len(data); i++ {
 			module := data[i]
 
-			if module.Type != ast.String {
+			if module.Type != ast.String && module.Type != ast.Ident {
 				return ast.None, fmt.Errorf("get: expected string or identifier as module arguments")
 			}
 

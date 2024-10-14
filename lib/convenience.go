@@ -5,6 +5,8 @@ import (
 	"github.com/Solarcode-org/Orion/lib/lexer"
 	"github.com/Solarcode-org/Orion/lib/parser"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // GetAbstractSyntaxTree returns the AST formed by the input source.
@@ -52,6 +54,12 @@ func RunFunc(funcCall ast.FuncCall, functions map[string]func(ast.DataList) (ast
 		}
 
 		return value
+	}
+
+	caser := cases.Title(language.AmericanEnglish)
+
+	if _, ok := functions[caser.String(funcCall.Name)]; ok {
+		log.Fatalf("Could not find function: %s\nDid you mean: %s?\n", funcCall.Name, caser.String(funcCall.Name))
 	}
 
 	log.Fatalf("Could not find function: %s\nMaybe you forgot to add a module prefix?\n", funcCall.Name)
