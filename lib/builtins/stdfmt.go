@@ -11,24 +11,34 @@ import (
 )
 
 func add_fmt_mod(functions FunctionsType) {
-	functions["print"] = fmt_print
-	functions["input"] = fmt_input
-	functions["fmt/print"] = fmt_print
-	functions["fmt/input"] = fmt_input
-	functions["fmt/join"] = fmt_join
+	functions["Println"] = fmt_println
+	functions["Print"] = fmt_print
+	functions["Input"] = fmt_input
+	functions["fmt/Println"] = fmt_println
+	functions["fmt/Print"] = fmt_print
+	functions["fmt/Input"] = fmt_input
+	functions["fmt/Join"] = fmt_join
 }
 
 func fmt_print(data ast.DataList) (ast.Data, error) {
-	for i := 0; i < len(data); i++ {
-		datum := data[i]
+	args := EvalArgs(data)
 
-		if datum.Type == ast.String {
-			fmt.Print(datum.Data)
-		} else if data[0].Type == ast.FuncCallType {
-			value := lib.RunFunc(data[0].Func, Functions)
+	for i := 0; i < len(args); i++ {
+		datum := args[i]
+		fmt.Print(datum.Data)
 
-			fmt.Print(value.Data)
-		}
+		fmt.Print(" ")
+	}
+
+	return ast.None, nil
+}
+
+func fmt_println(data ast.DataList) (ast.Data, error) {
+	args := EvalArgs(data)
+
+	for i := 0; i < len(args); i++ {
+		datum := args[i]
+		fmt.Print(datum.Data)
 
 		fmt.Print(" ")
 	}
@@ -39,11 +49,12 @@ func fmt_print(data ast.DataList) (ast.Data, error) {
 }
 
 func fmt_input(data ast.DataList) (ast.Data, error) {
-	lib.ExactArgs("input", data, 1)
+	args := EvalArgs(data)
+	lib.ExactArgs("input", args, 1)
 
-	if data[0].Type == ast.String {
+	if args[0].Type == ast.String {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print(data[0].Data)
+		fmt.Print(args[0].Data)
 
 		ans, err := reader.ReadString('\n')
 		if err != nil {
@@ -58,43 +69,17 @@ func fmt_input(data ast.DataList) (ast.Data, error) {
 		}, nil
 	}
 
-	if data[0].Type == ast.FuncCallType {
-		value := lib.RunFunc(data[0].Func, Functions)
-
-		if value.Type == ast.String {
-			reader := bufio.NewReader(os.Stdin)
-			fmt.Print(value.Data)
-
-			ans, err := reader.ReadString('\n')
-			if err != nil {
-				return ast.None, err
-			}
-
-			ans = strings.TrimSpace(ans)
-
-			return ast.Data{
-				Data: ans,
-				Type: ast.String,
-			}, nil
-		}
-	}
-
-	return ast.None, fmt.Errorf("expected prompt to be of type string")
+	return ast.None, fmt.Errorf("input: expected prompt to be of type string")
 }
 
 func fmt_join(data ast.DataList) (ast.Data, error) {
+	args := EvalArgs(data)
 	joined := ""
 
 	for i := 0; i < len(data); i++ {
-		datum := data[i]
+		datum := args[i]
 
-		if datum.Type == ast.String {
-			joined += datum.Data
-		} else if data[0].Type == ast.FuncCallType {
-			value := lib.RunFunc(data[0].Func, Functions)
-
-			joined += value.Data
-		}
+		joined += datum.Data
 	}
 
 	return ast.Data{

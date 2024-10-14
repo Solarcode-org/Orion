@@ -8,6 +8,10 @@ _idchar : _letter | _digit | '_' | '/' ;
 
 id : (_letter | '_') {_idchar} ;
 
+int : _digit {_digit} ;
+
+float : _digit {_digit} '.' {_digit} ;
+
 quotedstring : '"' (.) {.} '"' ;
 
 !whitespace : ' ' | '\t' | '\n' | '\r' ;
@@ -33,18 +37,20 @@ FuncCallList :
 ;
 
 FuncCall :
-      id DataList << ast.NewFuncCall($T0, $1) >>
+      id "(" DataList ")"       << ast.NewFuncCall($T0, $2) >>
+    | "let" id "=" Data         << ast.NewFuncCallOneArg($T1, $3) >>
+    | "get" Data                << ast.NewFuncCallOneArg($T0, $1) >>
 ;
 
 DataList :
-      Data                    << ast.NewDataList($0) >>
-    | "(" Data ")"            << ast.NewDataList($1) >>
-    | DataList Data           << ast.AppendData($0, $1) >>
-    | DataList "(" Data ")"   << ast.AppendData($0, $2) >>
+      Data                      << ast.NewDataList($0) >>
+    | DataList "," Data         << ast.AppendData($0, $2) >>
 ;
 
 Data :
       quotedstring      << ast.NewData($T0, ast.String) >>
-//  | id                << ast.NewData($T0, ast.Ident) >>
-    | "(" FuncCall ")"  << ast.NewFuncData($1) >>
+    | id                << ast.NewData($T0, ast.Ident) >>
+    | FuncCall          << ast.NewFuncData($0) >>
+    | int               << ast.NewData($T0, ast.Int) >>
+    | float             << ast.NewData($T0, ast.Float) >>
 ;

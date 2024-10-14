@@ -53,51 +53,51 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `FuncCall : id DataList	<< ast.NewFuncCall(X[0].(*token.Token), X[1]) >>`,
+		String: `FuncCall : id "(" DataList ")"	<< ast.NewFuncCall(X[0].(*token.Token), X[2]) >>`,
 		Id:         "FuncCall",
 		NTType:     2,
 		Index:      3,
+		NumSymbols: 4,
+		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
+			return ast.NewFuncCall(X[0].(*token.Token), X[2])
+		},
+	},
+	ProdTabEntry{
+		String: `FuncCall : "let" id "=" Data	<< ast.NewFuncCallOneArg(X[1].(*token.Token), X[3]) >>`,
+		Id:         "FuncCall",
+		NTType:     2,
+		Index:      4,
+		NumSymbols: 4,
+		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
+			return ast.NewFuncCallOneArg(X[1].(*token.Token), X[3])
+		},
+	},
+	ProdTabEntry{
+		String: `FuncCall : "get" Data	<< ast.NewFuncCallOneArg(X[0].(*token.Token), X[1]) >>`,
+		Id:         "FuncCall",
+		NTType:     2,
+		Index:      5,
 		NumSymbols: 2,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return ast.NewFuncCall(X[0].(*token.Token), X[1])
+			return ast.NewFuncCallOneArg(X[0].(*token.Token), X[1])
 		},
 	},
 	ProdTabEntry{
 		String: `DataList : Data	<< ast.NewDataList(X[0]) >>`,
 		Id:         "DataList",
 		NTType:     3,
-		Index:      4,
+		Index:      6,
 		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return ast.NewDataList(X[0])
 		},
 	},
 	ProdTabEntry{
-		String: `DataList : "(" Data ")"	<< ast.NewDataList(X[1]) >>`,
-		Id:         "DataList",
-		NTType:     3,
-		Index:      5,
-		NumSymbols: 3,
-		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return ast.NewDataList(X[1])
-		},
-	},
-	ProdTabEntry{
-		String: `DataList : DataList Data	<< ast.AppendData(X[0], X[1]) >>`,
-		Id:         "DataList",
-		NTType:     3,
-		Index:      6,
-		NumSymbols: 2,
-		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return ast.AppendData(X[0], X[1])
-		},
-	},
-	ProdTabEntry{
-		String: `DataList : DataList "(" Data ")"	<< ast.AppendData(X[0], X[2]) >>`,
+		String: `DataList : DataList "," Data	<< ast.AppendData(X[0], X[2]) >>`,
 		Id:         "DataList",
 		NTType:     3,
 		Index:      7,
-		NumSymbols: 4,
+		NumSymbols: 3,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
 			return ast.AppendData(X[0], X[2])
 		},
@@ -113,13 +113,43 @@ var productionsTable = ProdTab{
 		},
 	},
 	ProdTabEntry{
-		String: `Data : "(" FuncCall ")"	<< ast.NewFuncData(X[1]) >>`,
+		String: `Data : id	<< ast.NewData(X[0].(*token.Token), ast.Ident) >>`,
 		Id:         "Data",
 		NTType:     4,
 		Index:      9,
-		NumSymbols: 3,
+		NumSymbols: 1,
 		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
-			return ast.NewFuncData(X[1])
+			return ast.NewData(X[0].(*token.Token), ast.Ident)
+		},
+	},
+	ProdTabEntry{
+		String: `Data : FuncCall	<< ast.NewFuncData(X[0]) >>`,
+		Id:         "Data",
+		NTType:     4,
+		Index:      10,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
+			return ast.NewFuncData(X[0])
+		},
+	},
+	ProdTabEntry{
+		String: `Data : int	<< ast.NewData(X[0].(*token.Token), ast.Int) >>`,
+		Id:         "Data",
+		NTType:     4,
+		Index:      11,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
+			return ast.NewData(X[0].(*token.Token), ast.Int)
+		},
+	},
+	ProdTabEntry{
+		String: `Data : float	<< ast.NewData(X[0].(*token.Token), ast.Float) >>`,
+		Id:         "Data",
+		NTType:     4,
+		Index:      12,
+		NumSymbols: 1,
+		ReduceFunc: func(X []Attrib, C interface{}) (Attrib, error) {
+			return ast.NewData(X[0].(*token.Token), ast.Float)
 		},
 	},
 }

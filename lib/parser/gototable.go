@@ -20,7 +20,7 @@ var gotoTab = gotoTable{
 	gotoRow{ // S1
 		-1, // S'
 		-1, // FuncCallList
-		4,  // FuncCall
+		6,  // FuncCall
 		-1, // DataList
 		-1, // Data
 	},
@@ -35,8 +35,8 @@ var gotoTab = gotoTable{
 		-1, // S'
 		-1, // FuncCallList
 		-1, // FuncCall
-		5,  // DataList
-		6,  // Data
+		-1, // DataList
+		-1, // Data
 	},
 	gotoRow{ // S4
 		-1, // S'
@@ -48,9 +48,9 @@ var gotoTab = gotoTable{
 	gotoRow{ // S5
 		-1, // S'
 		-1, // FuncCallList
-		-1, // FuncCall
+		9,  // FuncCall
 		-1, // DataList
-		9,  // Data
+		11, // Data
 	},
 	gotoRow{ // S6
 		-1, // S'
@@ -62,9 +62,9 @@ var gotoTab = gotoTable{
 	gotoRow{ // S7
 		-1, // S'
 		-1, // FuncCallList
-		11, // FuncCall
-		-1, // DataList
-		13, // Data
+		15, // FuncCall
+		17, // DataList
+		19, // Data
 	},
 	gotoRow{ // S8
 		-1, // S'
@@ -83,9 +83,9 @@ var gotoTab = gotoTable{
 	gotoRow{ // S10
 		-1, // S'
 		-1, // FuncCallList
-		11, // FuncCall
+		-1, // FuncCall
 		-1, // DataList
-		16, // Data
+		-1, // Data
 	},
 	gotoRow{ // S11
 		-1, // S'
@@ -98,8 +98,8 @@ var gotoTab = gotoTable{
 		-1, // S'
 		-1, // FuncCallList
 		-1, // FuncCall
-		18, // DataList
-		19, // Data
+		-1, // DataList
+		-1, // Data
 	},
 	gotoRow{ // S13
 		-1, // S'
@@ -111,7 +111,7 @@ var gotoTab = gotoTable{
 	gotoRow{ // S14
 		-1, // S'
 		-1, // FuncCallList
-		23, // FuncCall
+		-1, // FuncCall
 		-1, // DataList
 		-1, // Data
 	},
@@ -141,7 +141,7 @@ var gotoTab = gotoTable{
 		-1, // FuncCallList
 		-1, // FuncCall
 		-1, // DataList
-		25, // Data
+		-1, // Data
 	},
 	gotoRow{ // S19
 		-1, // S'
@@ -153,9 +153,9 @@ var gotoTab = gotoTable{
 	gotoRow{ // S20
 		-1, // S'
 		-1, // FuncCallList
-		27, // FuncCall
+		15, // FuncCall
 		-1, // DataList
-		28, // Data
+		29, // Data
 	},
 	gotoRow{ // S21
 		-1, // S'
@@ -181,30 +181,30 @@ var gotoTab = gotoTable{
 	gotoRow{ // S24
 		-1, // S'
 		-1, // FuncCallList
-		-1, // FuncCall
+		9,  // FuncCall
 		-1, // DataList
-		-1, // Data
+		30, // Data
 	},
 	gotoRow{ // S25
 		-1, // S'
 		-1, // FuncCallList
-		-1, // FuncCall
-		-1, // DataList
-		-1, // Data
+		15, // FuncCall
+		31, // DataList
+		19, // Data
 	},
 	gotoRow{ // S26
 		-1, // S'
 		-1, // FuncCallList
-		27, // FuncCall
+		-1, // FuncCall
 		-1, // DataList
-		30, // Data
+		-1, // Data
 	},
 	gotoRow{ // S27
 		-1, // S'
 		-1, // FuncCallList
-		-1, // FuncCall
+		15, // FuncCall
 		-1, // DataList
-		-1, // Data
+		32, // Data
 	},
 	gotoRow{ // S28
 		-1, // S'
@@ -242,6 +242,20 @@ var gotoTab = gotoTable{
 		-1, // Data
 	},
 	gotoRow{ // S33
+		-1, // S'
+		-1, // FuncCallList
+		15, // FuncCall
+		-1, // DataList
+		35, // Data
+	},
+	gotoRow{ // S34
+		-1, // S'
+		-1, // FuncCallList
+		-1, // FuncCall
+		-1, // DataList
+		-1, // Data
+	},
+	gotoRow{ // S35
 		-1, // S'
 		-1, // FuncCallList
 		-1, // FuncCall

@@ -19,7 +19,13 @@ var actionTab = actionTable{
 			shift(3), // id
 			nil,      // (
 			nil,      // )
+			shift(4), // let
+			nil,      // =
+			shift(5), // get
+			nil,      // ,
 			nil,      // quotedstring
+			nil,      // int
+			nil,      // float
 		},
 	},
 	actionRow{ // S1
@@ -30,7 +36,13 @@ var actionTab = actionTable{
 			shift(3),     // id
 			nil,          // (
 			nil,          // )
+			shift(4),     // let
+			nil,          // =
+			shift(5),     // get
+			nil,          // ,
 			nil,          // quotedstring
+			nil,          // int
+			nil,          // float
 		},
 	},
 	actionRow{ // S2
@@ -41,7 +53,13 @@ var actionTab = actionTable{
 			reduce(1), // id, reduce: FuncCallList
 			nil,       // (
 			nil,       // )
+			reduce(1), // let, reduce: FuncCallList
+			nil,       // =
+			reduce(1), // get, reduce: FuncCallList
+			nil,       // ,
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S3
@@ -52,10 +70,50 @@ var actionTab = actionTable{
 			nil,      // id
 			shift(7), // (
 			nil,      // )
-			shift(8), // quotedstring
+			nil,      // let
+			nil,      // =
+			nil,      // get
+			nil,      // ,
+			nil,      // quotedstring
+			nil,      // int
+			nil,      // float
 		},
 	},
 	actionRow{ // S4
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,      // INVALID
+			nil,      // ␚
+			shift(8), // id
+			nil,      // (
+			nil,      // )
+			nil,      // let
+			nil,      // =
+			nil,      // get
+			nil,      // ,
+			nil,      // quotedstring
+			nil,      // int
+			nil,      // float
+		},
+	},
+	actionRow{ // S5
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // ␚
+			shift(10), // id
+			nil,       // (
+			nil,       // )
+			shift(4),  // let
+			nil,       // =
+			shift(5),  // get
+			nil,       // ,
+			shift(12), // quotedstring
+			shift(13), // int
+			shift(14), // float
+		},
+	},
+	actionRow{ // S6
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
@@ -63,29 +121,13 @@ var actionTab = actionTable{
 			reduce(2), // id, reduce: FuncCallList
 			nil,       // (
 			nil,       // )
+			reduce(2), // let, reduce: FuncCallList
+			nil,       // =
+			reduce(2), // get, reduce: FuncCallList
+			nil,       // ,
 			nil,       // quotedstring
-		},
-	},
-	actionRow{ // S5
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(3), // ␚, reduce: FuncCall
-			reduce(3), // id, reduce: FuncCall
-			shift(10), // (
-			nil,       // )
-			shift(8),  // quotedstring
-		},
-	},
-	actionRow{ // S6
-		canRecover: false,
-		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(4), // ␚, reduce: DataList
-			reduce(4), // id, reduce: DataList
-			reduce(4), // (, reduce: DataList
-			nil,       // )
-			reduce(4), // quotedstring, reduce: DataList
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S7
@@ -93,98 +135,152 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
-			shift(12), // id
-			shift(14), // (
+			shift(16), // id
+			nil,       // (
 			nil,       // )
-			shift(15), // quotedstring
+			shift(18), // let
+			nil,       // =
+			shift(20), // get
+			nil,       // ,
+			shift(21), // quotedstring
+			shift(22), // int
+			shift(23), // float
 		},
 	},
 	actionRow{ // S8
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(8), // ␚, reduce: Data
-			reduce(8), // id, reduce: Data
-			reduce(8), // (, reduce: Data
+			nil,       // ␚
+			nil,       // id
+			nil,       // (
 			nil,       // )
-			reduce(8), // quotedstring, reduce: Data
+			nil,       // let
+			shift(24), // =
+			nil,       // get
+			nil,       // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S9
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(6), // ␚, reduce: DataList
-			reduce(6), // id, reduce: DataList
-			reduce(6), // (, reduce: DataList
-			nil,       // )
-			reduce(6), // quotedstring, reduce: DataList
+			nil,        // INVALID
+			reduce(10), // ␚, reduce: Data
+			reduce(10), // id, reduce: Data
+			nil,        // (
+			nil,        // )
+			reduce(10), // let, reduce: Data
+			nil,        // =
+			reduce(10), // get, reduce: Data
+			nil,        // ,
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S10
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // ␚
-			shift(12), // id
-			shift(14), // (
+			reduce(9), // ␚, reduce: Data
+			reduce(9), // id, reduce: Data
+			shift(7),  // (
 			nil,       // )
-			shift(15), // quotedstring
+			reduce(9), // let, reduce: Data
+			nil,       // =
+			reduce(9), // get, reduce: Data
+			nil,       // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S11
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
+			reduce(5), // ␚, reduce: FuncCall
+			reduce(5), // id, reduce: FuncCall
 			nil,       // (
-			shift(17), // )
+			nil,       // )
+			reduce(5), // let, reduce: FuncCall
+			nil,       // =
+			reduce(5), // get, reduce: FuncCall
+			nil,       // ,
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S12
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
-			shift(20), // (
+			reduce(8), // ␚, reduce: Data
+			reduce(8), // id, reduce: Data
+			nil,       // (
 			nil,       // )
-			shift(21), // quotedstring
+			reduce(8), // let, reduce: Data
+			nil,       // =
+			reduce(8), // get, reduce: Data
+			nil,       // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S13
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
-			nil,       // (
-			shift(22), // )
-			nil,       // quotedstring
+			nil,        // INVALID
+			reduce(11), // ␚, reduce: Data
+			reduce(11), // id, reduce: Data
+			nil,        // (
+			nil,        // )
+			reduce(11), // let, reduce: Data
+			nil,        // =
+			reduce(11), // get, reduce: Data
+			nil,        // ,
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S14
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // ␚
-			shift(12), // id
-			nil,       // (
-			nil,       // )
-			nil,       // quotedstring
+			nil,        // INVALID
+			reduce(12), // ␚, reduce: Data
+			reduce(12), // id, reduce: Data
+			nil,        // (
+			nil,        // )
+			reduce(12), // let, reduce: Data
+			nil,        // =
+			reduce(12), // get, reduce: Data
+			nil,        // ,
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S15
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
-			nil,       // (
-			reduce(8), // ), reduce: Data
-			nil,       // quotedstring
+			nil,        // INVALID
+			nil,        // ␚
+			nil,        // id
+			nil,        // (
+			reduce(10), // ), reduce: Data
+			nil,        // let
+			nil,        // =
+			nil,        // get
+			reduce(10), // ,, reduce: Data
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S16
@@ -193,20 +289,32 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // ␚
 			nil,       // id
-			nil,       // (
-			shift(24), // )
+			shift(25), // (
+			reduce(9), // ), reduce: Data
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(9), // ,, reduce: Data
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S17
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(9), // ␚, reduce: Data
-			reduce(9), // id, reduce: Data
-			reduce(9), // (, reduce: Data
-			nil,       // )
-			reduce(9), // quotedstring, reduce: Data
+			nil,       // ␚
+			nil,       // id
+			nil,       // (
+			shift(26), // )
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			shift(27), // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S18
@@ -214,10 +322,16 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
-			nil,       // id
-			shift(26), // (
-			reduce(3), // ), reduce: FuncCall
-			shift(21), // quotedstring
+			shift(28), // id
+			nil,       // (
+			nil,       // )
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			nil,       // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S19
@@ -226,9 +340,15 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // ␚
 			nil,       // id
-			reduce(4), // (, reduce: DataList
-			reduce(4), // ), reduce: DataList
-			reduce(4), // quotedstring, reduce: DataList
+			nil,       // (
+			reduce(6), // ), reduce: DataList
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(6), // ,, reduce: DataList
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S20
@@ -236,10 +356,16 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
-			shift(12), // id
-			shift(14), // (
+			shift(16), // id
+			nil,       // (
 			nil,       // )
-			shift(15), // quotedstring
+			shift(18), // let
+			nil,       // =
+			shift(20), // get
+			nil,       // ,
+			shift(21), // quotedstring
+			shift(22), // int
+			shift(23), // float
 		},
 	},
 	actionRow{ // S21
@@ -248,42 +374,66 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // ␚
 			nil,       // id
-			reduce(8), // (, reduce: Data
+			nil,       // (
 			reduce(8), // ), reduce: Data
-			reduce(8), // quotedstring, reduce: Data
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(8), // ,, reduce: Data
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S22
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			reduce(5), // ␚, reduce: DataList
-			reduce(5), // id, reduce: DataList
-			reduce(5), // (, reduce: DataList
-			nil,       // )
-			reduce(5), // quotedstring, reduce: DataList
+			nil,        // INVALID
+			nil,        // ␚
+			nil,        // id
+			nil,        // (
+			reduce(11), // ), reduce: Data
+			nil,        // let
+			nil,        // =
+			nil,        // get
+			reduce(11), // ,, reduce: Data
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S23
 		canRecover: false,
 		actions: [numSymbols]action{
-			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
-			nil,       // (
-			shift(29), // )
-			nil,       // quotedstring
+			nil,        // INVALID
+			nil,        // ␚
+			nil,        // id
+			nil,        // (
+			reduce(12), // ), reduce: Data
+			nil,        // let
+			nil,        // =
+			nil,        // get
+			reduce(12), // ,, reduce: Data
+			nil,        // quotedstring
+			nil,        // int
+			nil,        // float
 		},
 	},
 	actionRow{ // S24
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			reduce(7), // ␚, reduce: DataList
-			reduce(7), // id, reduce: DataList
-			reduce(7), // (, reduce: DataList
+			nil,       // ␚
+			shift(10), // id
+			nil,       // (
 			nil,       // )
-			reduce(7), // quotedstring, reduce: DataList
+			shift(4),  // let
+			nil,       // =
+			shift(5),  // get
+			nil,       // ,
+			shift(12), // quotedstring
+			shift(13), // int
+			shift(14), // float
 		},
 	},
 	actionRow{ // S25
@@ -291,21 +441,33 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
-			nil,       // id
-			reduce(6), // (, reduce: DataList
-			reduce(6), // ), reduce: DataList
-			reduce(6), // quotedstring, reduce: DataList
+			shift(16), // id
+			nil,       // (
+			nil,       // )
+			shift(18), // let
+			nil,       // =
+			shift(20), // get
+			nil,       // ,
+			shift(21), // quotedstring
+			shift(22), // int
+			shift(23), // float
 		},
 	},
 	actionRow{ // S26
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // ␚
-			shift(12), // id
-			shift(14), // (
+			reduce(3), // ␚, reduce: FuncCall
+			reduce(3), // id, reduce: FuncCall
+			nil,       // (
 			nil,       // )
-			shift(15), // quotedstring
+			reduce(3), // let, reduce: FuncCall
+			nil,       // =
+			reduce(3), // get, reduce: FuncCall
+			nil,       // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S27
@@ -313,10 +475,16 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
-			nil,       // id
+			shift(16), // id
 			nil,       // (
-			shift(31), // )
-			nil,       // quotedstring
+			nil,       // )
+			shift(18), // let
+			nil,       // =
+			shift(20), // get
+			nil,       // ,
+			shift(21), // quotedstring
+			shift(22), // int
+			shift(23), // float
 		},
 	},
 	actionRow{ // S28
@@ -326,8 +494,14 @@ var actionTab = actionTable{
 			nil,       // ␚
 			nil,       // id
 			nil,       // (
-			shift(32), // )
+			nil,       // )
+			nil,       // let
+			shift(33), // =
+			nil,       // get
+			nil,       // ,
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S29
@@ -337,19 +511,31 @@ var actionTab = actionTable{
 			nil,       // ␚
 			nil,       // id
 			nil,       // (
-			reduce(9), // ), reduce: Data
+			reduce(5), // ), reduce: FuncCall
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(5), // ,, reduce: FuncCall
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S30
 		canRecover: false,
 		actions: [numSymbols]action{
 			nil,       // INVALID
-			nil,       // ␚
-			nil,       // id
+			reduce(4), // ␚, reduce: FuncCall
+			reduce(4), // id, reduce: FuncCall
 			nil,       // (
-			shift(33), // )
+			nil,       // )
+			reduce(4), // let, reduce: FuncCall
+			nil,       // =
+			reduce(4), // get, reduce: FuncCall
+			nil,       // ,
 			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S31
@@ -358,9 +544,15 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // ␚
 			nil,       // id
-			reduce(9), // (, reduce: Data
-			reduce(9), // ), reduce: Data
-			reduce(9), // quotedstring, reduce: Data
+			nil,       // (
+			shift(34), // )
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			shift(27), // ,
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S32
@@ -369,9 +561,15 @@ var actionTab = actionTable{
 			nil,       // INVALID
 			nil,       // ␚
 			nil,       // id
-			reduce(5), // (, reduce: DataList
-			reduce(5), // ), reduce: DataList
-			reduce(5), // quotedstring, reduce: DataList
+			nil,       // (
+			reduce(7), // ), reduce: DataList
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(7), // ,, reduce: DataList
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 	actionRow{ // S33
@@ -379,10 +577,50 @@ var actionTab = actionTable{
 		actions: [numSymbols]action{
 			nil,       // INVALID
 			nil,       // ␚
+			shift(16), // id
+			nil,       // (
+			nil,       // )
+			shift(18), // let
+			nil,       // =
+			shift(20), // get
+			nil,       // ,
+			shift(21), // quotedstring
+			shift(22), // int
+			shift(23), // float
+		},
+	},
+	actionRow{ // S34
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // ␚
 			nil,       // id
-			reduce(7), // (, reduce: DataList
-			reduce(7), // ), reduce: DataList
-			reduce(7), // quotedstring, reduce: DataList
+			nil,       // (
+			reduce(3), // ), reduce: FuncCall
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(3), // ,, reduce: FuncCall
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
+		},
+	},
+	actionRow{ // S35
+		canRecover: false,
+		actions: [numSymbols]action{
+			nil,       // INVALID
+			nil,       // ␚
+			nil,       // id
+			nil,       // (
+			reduce(4), // ), reduce: FuncCall
+			nil,       // let
+			nil,       // =
+			nil,       // get
+			reduce(4), // ,, reduce: FuncCall
+			nil,       // quotedstring
+			nil,       // int
+			nil,       // float
 		},
 	},
 }

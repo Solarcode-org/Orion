@@ -23,6 +23,8 @@ import (
 	"github.com/Solarcode-org/Orion/lib/builtins"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // iorCmd represents the ior command
@@ -60,6 +62,11 @@ var iorCmd = &cobra.Command{
 					log.Fatalf("%s: %s\n", funcCall.Name, err)
 				}
 			} else {
+				caser := cases.Title(language.AmericanEnglish)
+
+				if _, ok := builtins.Functions[caser.String(funcCall.Name)]; ok {
+					log.Fatalf("Could not find function: %s\nDid you mean: %s?\n", funcCall.Name, caser.String(funcCall.Name))
+				}
 				log.Fatalf("Could not find function: %s\nMaybe you forgot to add a module prefix?\n", funcCall.Name)
 			}
 		}
