@@ -5,6 +5,9 @@ version: 2
 env:
   - GO111MODULE=on
 
+env_files:
+  github_token: ~/.github_token
+
 project_name: orion
 
 before:
@@ -16,7 +19,7 @@ before:
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
 
-gomod:  
+gomod:
   proxy: true
 
 report_sizes: true
