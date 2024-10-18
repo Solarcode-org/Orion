@@ -32,6 +32,8 @@ var iorCmd = &cobra.Command{
 	Use:   "ior",
 	Short: "Run an individual Orion source file",
 	Long:  `Run an individual Orion source file.`,
+	Example: `# Run foo.or
+	$ orion ior foo.or`,
 	/*Cobra is a CLI library for Go that empowers applications.
 	This application is a tool to generate the needed files
 	to quickly create a Cobra application.*/

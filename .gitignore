@@ -1,4 +1,12 @@
+# GOCC Logs
 LR1_*.txt
 first.txt
 lexer_sets.txt
 terminals.txt
+
+# GoReleaser Directory
+dist/
+
+# Completions and manpages
+completions/
+manpages/
