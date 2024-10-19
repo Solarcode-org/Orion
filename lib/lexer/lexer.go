@@ -6,7 +6,7 @@ import (
 	"os"
 	"unicode/utf8"
 
-	"github.com/Solarcode-org/Orion/lib/token"
+	"token"
 )
 
 const (

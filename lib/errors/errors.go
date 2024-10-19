@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/Solarcode-org/Orion/lib/token"
+	"token"
 )
 
 type ErrorSymbol interface {

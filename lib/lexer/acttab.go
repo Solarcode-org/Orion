@@ -5,7 +5,7 @@ package lexer
 import (
 	"fmt"
 
-	"github.com/Solarcode-org/Orion/lib/token"
+	"token"
 )
 
 type ActionTable [NumStates]ActionRow
