@@ -3,6 +3,7 @@ module github.com/Solarcode-org/Orion
 go 1.23.0
 
 require (
+	github.com/goccmack/goutil v1.2.3
 	github.com/shopspring/decimal v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1

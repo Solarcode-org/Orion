@@ -4,15 +4,15 @@ version: "3"
 
 vars:
   GRAMMAR_DIR: lib
-  GRAMMAR_FILE: orion.bnf
+  GRAMMAR_FILE: orion.md
 
 tasks:
   grammar:
-    cmd: "cd {{.GRAMMAR_DIR}} && gocc {{.GRAMMAR_FILE}}"
+    cmd: "cd {{.GRAMMAR_DIR}} && gogll {{.GRAMMAR_FILE}}"
     silent: true
 
   grammar_verbose:
-    cmd: "cd {{.GRAMMAR_DIR}} && gocc -v {{.GRAMMAR_FILE}}"
+    cmd: "cd {{.GRAMMAR_DIR}} && gogll -v {{.GRAMMAR_FILE}}"
     silent: true
 
   dev:
