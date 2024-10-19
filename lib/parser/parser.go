@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	parseError "github.com/Solarcode-org/Orion/lib/errors"
-	"github.com/Solarcode-org/Orion/lib/token"
+	parseError "errors"
+	"token"
 )
 
 const (
