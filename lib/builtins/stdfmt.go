@@ -22,9 +22,16 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Solarcode-org/Orion/ast"
 	"github.com/Solarcode-org/Orion/lib"
-	"github.com/Solarcode-org/Orion/lib/ast"
 )
+
+// 	"bufio"
+// 	"fmt"
+// 	"os"
+// 	"strings"
+
+// 	"github.com/Solarcode-org/Orion/lib"
 
 func add_fmt_mod(functions FunctionsType) {
 	functions["Println"] = fmt_println
@@ -36,70 +43,71 @@ func add_fmt_mod(functions FunctionsType) {
 	functions["fmt/Join"] = fmt_join
 }
 
-func fmt_print(data ast.DataList) (ast.Data, error) {
+func fmt_print(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 
 	for i := 0; i < len(args); i++ {
 		datum := args[i]
-		fmt.Print(datum.Data)
+		fmt.Print(datum.Id)
 
 		fmt.Print(" ")
 	}
 
-	return ast.None, nil
+	return ast.Expr{}, nil
 }
 
-func fmt_println(data ast.DataList) (ast.Data, error) {
+func fmt_println(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 
 	for i := 0; i < len(args); i++ {
 		datum := args[i]
-		fmt.Print(datum.Data)
+
+		fmt.Print(datum.Id)
 
 		fmt.Print(" ")
 	}
 
 	fmt.Println()
 
-	return ast.None, nil
+	return ast.Expr{}, nil
 }
 
-func fmt_input(data ast.DataList) (ast.Data, error) {
+func fmt_input(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("input", args, 1)
 
-	if args[0].Type == ast.String {
+	if args[0].Type == ast.Expr_String {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print(args[0].Data)
+		fmt.Print(args[0].Id)
 
 		ans, err := reader.ReadString('\n')
 		if err != nil {
-			return ast.None, err
+			return ast.Expr{}, err
 		}
 
 		ans = strings.TrimSpace(ans)
 
-		return ast.Data{
-			Data: ans,
-			Type: ast.String,
+		return ast.Expr{
+			Id:   ans,
+			Type: ast.Expr_String,
 		}, nil
 	}
 
-	return ast.None, fmt.Errorf("input: expected prompt to be of type string")
+	return ast.Expr{}, fmt.Errorf("input: expected prompt to be of type string")
 }
 
-func fmt_join(data ast.DataList) (ast.Data, error) {
+func fmt_join(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	joined := ""
 
 	for i := 0; i < len(data); i++ {
 		datum := args[i]
 
-		joined += datum.Data
+		joined += datum.Id
 	}
 
-	return ast.Data{
-		Data: joined,
-		Type: ast.String,
+	return ast.Expr{
+		Id:   joined,
+		Type: ast.Expr_String,
 	}, nil
 }

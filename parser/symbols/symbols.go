@@ -22,6 +22,7 @@ const(
 	NT_Data NT = iota
 	NT_DataList 
 	NT_FuncCall 
+	NT_Import 
 	NT_Orion 
 	NT_Package 
 	NT_Statement 
@@ -34,9 +35,12 @@ const(
 	T_0 T = iota // ( 
 	T_1  // ) 
 	T_2  // , 
-	T_3  // ident 
-	T_4  // package 
-	T_5  // string_lit 
+	T_3  // block_comment 
+	T_4  // get 
+	T_5  // ident 
+	T_6  // line_comment 
+	T_7  // package 
+	T_8  // string_lit 
 )
 
 type Symbols []Symbol
@@ -107,6 +111,7 @@ var ntToString = []string {
 	"Data", /* NT_Data */
 	"DataList", /* NT_DataList */
 	"FuncCall", /* NT_FuncCall */
+	"Import", /* NT_Import */
 	"Orion", /* NT_Orion */
 	"Package", /* NT_Package */
 	"Statement", /* NT_Statement */
@@ -117,15 +122,19 @@ var tToString = []string {
 	"(", /* T_0 */
 	")", /* T_1 */
 	",", /* T_2 */
-	"ident", /* T_3 */
-	"package", /* T_4 */
-	"string_lit", /* T_5 */ 
+	"block_comment", /* T_3 */
+	"get", /* T_4 */
+	"ident", /* T_5 */
+	"line_comment", /* T_6 */
+	"package", /* T_7 */
+	"string_lit", /* T_8 */ 
 }
 
 var stringNT = map[string]NT{ 
 	"Data":NT_Data,
 	"DataList":NT_DataList,
 	"FuncCall":NT_FuncCall,
+	"Import":NT_Import,
 	"Orion":NT_Orion,
 	"Package":NT_Package,
 	"Statement":NT_Statement,

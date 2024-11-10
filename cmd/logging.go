@@ -31,7 +31,7 @@ func (f *PlainFormatter) Format(entry *log.Entry) ([]byte, error) {
 }
 func toggleDebug(*cobra.Command, []string) {
 	if verbose > 0 {
-		log.Info("Debug logs enabled")
+		log.Infof("%s logs enabled\n", log.Level(verbose).String())
 		log.SetLevel(log.Level(verbose))
 		log.SetFormatter(&log.TextFormatter{})
 	} else {

@@ -15,11 +15,11 @@ import (
     "sort"
     "strings"
 
-    "github.com/Solarcode-org/Orion/lib/lexer"
-    "github.com/Solarcode-org/Orion/lib/parser/slot"
-    "github.com/Solarcode-org/Orion/lib/parser/symbols"
-    "github.com/Solarcode-org/Orion/lib/sppf"
-    "github.com/Solarcode-org/Orion/lib/token"
+    "github.com/Solarcode-org/Orion/lexer"
+    "github.com/Solarcode-org/Orion/parser/slot"
+    "github.com/Solarcode-org/Orion/parser/symbols"
+    "github.com/Solarcode-org/Orion/sppf"
+    "github.com/Solarcode-org/Orion/token"
 )
 
 type bsr interface {
