@@ -6,7 +6,7 @@ import(
 	"bytes"
 	"fmt"
 	
-	"github.com/Solarcode-org/Orion/lib/parser/symbols"
+	"github.com/Solarcode-org/Orion/parser/symbols"
 )
 
 type Label int
@@ -14,6 +14,8 @@ type Label int
 const(
 	Data0R0 Label = iota
 	Data0R1
+	Data1R0
+	Data1R1
 	DataList0R0
 	DataList0R1
 	DataList1R0
@@ -25,6 +27,9 @@ const(
 	FuncCall0R2
 	FuncCall0R3
 	FuncCall0R4
+	Import0R0
+	Import0R1
+	Import0R2
 	Orion0R0
 	Orion0R1
 	Orion0R2
@@ -33,6 +38,8 @@ const(
 	Package0R2
 	Statement0R0
 	Statement0R1
+	Statement1R0
+	Statement1R1
 	Statements0R0
 	Statements0R1
 	Statements1R0
@@ -130,16 +137,30 @@ var slots = map[Label]*Slot{
 	Data0R0: {
 		symbols.NT_Data, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_5,
+			symbols.T_8,
 		}, 
 		Data0R0, 
 	},
 	Data0R1: {
 		symbols.NT_Data, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_5,
+			symbols.T_8,
 		}, 
 		Data0R1, 
+	},
+	Data1R0: {
+		symbols.NT_Data, 1, 0, 
+		symbols.Symbols{  
+			symbols.NT_FuncCall,
+		}, 
+		Data1R0, 
+	},
+	Data1R1: {
+		symbols.NT_Data, 1, 1, 
+		symbols.Symbols{  
+			symbols.NT_FuncCall,
+		}, 
+		Data1R1, 
 	},
 	DataList0R0: {
 		symbols.NT_DataList, 0, 0, 
@@ -194,7 +215,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R0: {
 		symbols.NT_FuncCall, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_3, 
+			symbols.T_5, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -204,7 +225,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R1: {
 		symbols.NT_FuncCall, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_3, 
+			symbols.T_5, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -214,7 +235,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R2: {
 		symbols.NT_FuncCall, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_3, 
+			symbols.T_5, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -224,7 +245,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R3: {
 		symbols.NT_FuncCall, 0, 3, 
 		symbols.Symbols{  
-			symbols.T_3, 
+			symbols.T_5, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -234,12 +255,36 @@ var slots = map[Label]*Slot{
 	FuncCall0R4: {
 		symbols.NT_FuncCall, 0, 4, 
 		symbols.Symbols{  
-			symbols.T_3, 
+			symbols.T_5, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
 		}, 
 		FuncCall0R4, 
+	},
+	Import0R0: {
+		symbols.NT_Import, 0, 0, 
+		symbols.Symbols{  
+			symbols.T_4, 
+			symbols.NT_DataList,
+		}, 
+		Import0R0, 
+	},
+	Import0R1: {
+		symbols.NT_Import, 0, 1, 
+		symbols.Symbols{  
+			symbols.T_4, 
+			symbols.NT_DataList,
+		}, 
+		Import0R1, 
+	},
+	Import0R2: {
+		symbols.NT_Import, 0, 2, 
+		symbols.Symbols{  
+			symbols.T_4, 
+			symbols.NT_DataList,
+		}, 
+		Import0R2, 
 	},
 	Orion0R0: {
 		symbols.NT_Orion, 0, 0, 
@@ -268,24 +313,24 @@ var slots = map[Label]*Slot{
 	Package0R0: {
 		symbols.NT_Package, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_4, 
-			symbols.T_5,
+			symbols.T_7, 
+			symbols.T_8,
 		}, 
 		Package0R0, 
 	},
 	Package0R1: {
 		symbols.NT_Package, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_4, 
-			symbols.T_5,
+			symbols.T_7, 
+			symbols.T_8,
 		}, 
 		Package0R1, 
 	},
 	Package0R2: {
 		symbols.NT_Package, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_4, 
-			symbols.T_5,
+			symbols.T_7, 
+			symbols.T_8,
 		}, 
 		Package0R2, 
 	},
@@ -302,6 +347,20 @@ var slots = map[Label]*Slot{
 			symbols.NT_FuncCall,
 		}, 
 		Statement0R1, 
+	},
+	Statement1R0: {
+		symbols.NT_Statement, 1, 0, 
+		symbols.Symbols{  
+			symbols.NT_Import,
+		}, 
+		Statement1R0, 
+	},
+	Statement1R1: {
+		symbols.NT_Statement, 1, 1, 
+		symbols.Symbols{  
+			symbols.NT_Import,
+		}, 
+		Statement1R1, 
 	},
 	Statements0R0: {
 		symbols.NT_Statements, 0, 0, 
@@ -346,6 +405,8 @@ var slots = map[Label]*Slot{
 var slotIndex = map[Index]Label { 
 	Index{ symbols.NT_Data,0,0 }: Data0R0,
 	Index{ symbols.NT_Data,0,1 }: Data0R1,
+	Index{ symbols.NT_Data,1,0 }: Data1R0,
+	Index{ symbols.NT_Data,1,1 }: Data1R1,
 	Index{ symbols.NT_DataList,0,0 }: DataList0R0,
 	Index{ symbols.NT_DataList,0,1 }: DataList0R1,
 	Index{ symbols.NT_DataList,1,0 }: DataList1R0,
@@ -357,6 +418,9 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_FuncCall,0,2 }: FuncCall0R2,
 	Index{ symbols.NT_FuncCall,0,3 }: FuncCall0R3,
 	Index{ symbols.NT_FuncCall,0,4 }: FuncCall0R4,
+	Index{ symbols.NT_Import,0,0 }: Import0R0,
+	Index{ symbols.NT_Import,0,1 }: Import0R1,
+	Index{ symbols.NT_Import,0,2 }: Import0R2,
 	Index{ symbols.NT_Orion,0,0 }: Orion0R0,
 	Index{ symbols.NT_Orion,0,1 }: Orion0R1,
 	Index{ symbols.NT_Orion,0,2 }: Orion0R2,
@@ -365,6 +429,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Package,0,2 }: Package0R2,
 	Index{ symbols.NT_Statement,0,0 }: Statement0R0,
 	Index{ symbols.NT_Statement,0,1 }: Statement0R1,
+	Index{ symbols.NT_Statement,1,0 }: Statement1R0,
+	Index{ symbols.NT_Statement,1,1 }: Statement1R1,
 	Index{ symbols.NT_Statements,0,0 }: Statements0R0,
 	Index{ symbols.NT_Statements,0,1 }: Statements0R1,
 	Index{ symbols.NT_Statements,1,0 }: Statements1R0,
@@ -376,9 +442,10 @@ var alternates = map[symbols.NT][]Label{
 	symbols.NT_Orion:[]Label{ Orion0R0 },
 	symbols.NT_Package:[]Label{ Package0R0 },
 	symbols.NT_Statements:[]Label{ Statements0R0,Statements1R0 },
-	symbols.NT_Statement:[]Label{ Statement0R0 },
+	symbols.NT_Statement:[]Label{ Statement0R0,Statement1R0 },
 	symbols.NT_FuncCall:[]Label{ FuncCall0R0 },
+	symbols.NT_Import:[]Label{ Import0R0 },
 	symbols.NT_DataList:[]Label{ DataList0R0,DataList1R0 },
-	symbols.NT_Data:[]Label{ Data0R0 },
+	symbols.NT_Data:[]Label{ Data0R0,Data1R0 },
 }
 

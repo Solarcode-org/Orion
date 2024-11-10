@@ -19,14 +19,20 @@ limitations under the License.
 This is the Grammar File for the Orion language.
 
 ```
-package "github.com/Solarcode-org/Orion/lib"
+package "github.com/Solarcode-org/Orion"
 ```
 
 ## Lexical Rules
 
 ### Identifier:
 ```
-ident : letter {letter|number|'_'|'?'} ;
+ident : letter {letter|number|'_'|'?'|'/'} ;
+```
+
+### Comments:
+```
+!line_comment : ';' {not "\n"} ;
+!block_comment : '/''*' {not "*" | '*' not "/"} '*''/' ;
 ```
 
 ### String Literal:
@@ -67,20 +73,19 @@ Statements
 
 ## The Statement (singular) Rule
 
-It represents three types of statements:
+It represents four types of statements:
   1. [Function definitions](#todo-the-function-definition-rule) (_TODO_)
   2. [Function calls](#the-function-call-rule)
   3. [Variable definitions](#todo-the-variable-definition-rule) (_TODO_)
+  4. [Imports](#the-import-rule)
 
 ```
-Statement : FuncCall ; 
+Statement : FuncCall | Import ; 
 ```
 
 ## (_TODO_): The Function Definition Rule
 
 It represents a function definition.
-
-<!-- TODO: -->
 
 ## The Function Call Rule
 
@@ -90,6 +95,16 @@ The arguments are in the form of a [DataList](#the-datalist-rule).
 ```
 FuncCall : ident "(" DataList ")" ;
 ```
+
+## The Import Rule
+
+It represent an import of a module or package
+The arguments are in the form of a [DataList](#the-datalist-rule).
+
+```
+Import : "get" DataList ;
+```
+
 
 ## (_TODO_): The Variable Definition Rule
 
@@ -111,5 +126,5 @@ DataList
 It represents all data types in Orion: string, numbers (_TODO_), etc.
 
 ```
-Data : string_lit ;
+Data : string_lit | FuncCall ;
 ```

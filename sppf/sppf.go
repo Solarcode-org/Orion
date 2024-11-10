@@ -14,7 +14,7 @@ import (
 	"bytes"
 	"github.com/goccmack/goutil/ioutil"
 
-	"github.com/Solarcode-org/Orion/lib/parser/symbols"
+	"github.com/Solarcode-org/Orion/parser/symbols"
 )
 
 type Node interface {
