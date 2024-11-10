@@ -51,7 +51,7 @@ Specifiy the '-P' flag to generate manpages in custom directory (default=./manpa
 }
 
 func init() {
-	rootCmd.AddCommand(manpagesCmd)
+	RootCmd.AddCommand(manpagesCmd)
 
 	// Here you will define your flags and configuration settings.
 

@@ -38,3 +38,13 @@ tasks:
       - grammar_verbose
     cmd: "go run . ior {{.FILE}}"
     interactive: true
+
+  test:
+    deps:
+      - grammar
+    cmd: "go test ./..."
+
+  bench:
+    deps:
+      - grammar
+    cmd: "go test -benchmem -run=^$ -bench=./... ./..."

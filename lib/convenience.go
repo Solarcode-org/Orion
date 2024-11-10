@@ -17,6 +17,9 @@ limitations under the License.
 package lib
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Solarcode-org/Orion/ast"
 	"github.com/Solarcode-org/Orion/lexer"
 	"github.com/Solarcode-org/Orion/parser"
@@ -26,20 +29,20 @@ import (
 )
 
 // GetAbstractSyntaxTree returns the AST formed by the input source.
-func GetAbstractSyntaxTree(src []byte) []*ast.Expr {
+func GetAbstractSyntaxTree(src []byte) ([]*ast.Expr, []*parser.Error) {
 	log.Tracef("started function `lib.GetAbstractSyntaxTree` with argument `src`=`%s`\n", src)
 
 	lex := lexer.New([]rune(string(src)))
 	bsrSet, errs := parser.Parse(lex)
 
 	if len(errs) > 0 {
-		fail(errs)
+		return nil, errs
 	}
 
 	ast := buildRoot(bsrSet.GetRoot())
 
 	log.Traceln("successfully ended function `lib.GetAbstractSyntaxTree`")
-	return ast
+	return ast, nil
 }
 
 // HandleFatal checks if an error value is not nil and runs `log.Fatalln` for the error.
@@ -79,4 +82,16 @@ func RunFunc(funcCall ast.Expr, functions map[string]func([]*ast.Expr) (ast.Expr
 
 	log.Fatalf("Could not find function: %s\nMaybe you forgot to add a module prefix?\n", funcCall.Id)
 	return ast.Expr{}
+}
+
+// Print all the errors with the same line number as errs[0] and exit(1)
+func FailParse(errs []*parser.Error) {
+	fmt.Println("Parse Errors:")
+	ln := errs[0].Line
+	for _, err := range errs {
+		if err.Line == ln {
+			fmt.Println("  ", err)
+		}
+	}
+	os.Exit(1)
 }

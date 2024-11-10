@@ -1,13 +1,10 @@
 package lib
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/Solarcode-org/Orion/ast"
 
-	"github.com/Solarcode-org/Orion/parser"
 	"github.com/Solarcode-org/Orion/parser/bsr"
 	"github.com/Solarcode-org/Orion/parser/symbols"
 	log "github.com/sirupsen/logrus"
@@ -155,16 +152,4 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 		log.Fatalln("reached invalid parse", b.Label.Head())
 		return &ast.Expr{}
 	}
-}
-
-// Print all the errors with the same line number as errs[0] and exit(1)
-func fail(errs []*parser.Error) {
-	fmt.Println("Parse Errors:")
-	ln := errs[0].Line
-	for _, err := range errs {
-		if err.Line == ln {
-			fmt.Println("  ", err)
-		}
-	}
-	os.Exit(1)
 }
