@@ -49,7 +49,12 @@ var iorCmd = &cobra.Command{
 
 		contents = append(contents, "\n"...)
 
-		astree := lib.GetAbstractSyntaxTree(contents)
+		astree, errs := lib.GetAbstractSyntaxTree(contents)
+
+		if len(errs) > 0 {
+			lib.FailParse(errs)
+		}
+
 		log.Tracef("Parsed into Abstract Syntax Tree: %v", astree)
 
 		// for i := 0; i < len(astree); i++ {
@@ -86,7 +91,7 @@ var iorCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(iorCmd)
+	RootCmd.AddCommand(iorCmd)
 
 	// Here you will define your flags and configuration settings.
 

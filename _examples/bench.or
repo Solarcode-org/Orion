@@ -1,0 +1,4 @@
+package "_examples/main"
+get "fmt"
+Println("Hi","user!")
+Println(Join("hi", "hello"))

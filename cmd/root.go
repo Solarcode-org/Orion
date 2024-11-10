@@ -27,8 +27,8 @@ import (
 var cfgFile string
 var verbose uint32
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+// RootCmd represents the base command when called without any subcommands
+var RootCmd = &cobra.Command{
 	Use:   "orion",
 	Short: "Orion is the CLI tool for the Orion programming language",
 	Long: `Orion is the CLI tool for the Orion programming language.
@@ -46,7 +46,7 @@ compiled language.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -59,8 +59,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orion.yaml)")
-	rootCmd.PersistentFlags().Uint32VarP(&verbose, "verbose", "v", 0, "config file (default is $HOME/.Orion.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orion.yaml)")
+	RootCmd.PersistentFlags().Uint32VarP(&verbose, "verbose", "v", 0, "config file (default is $HOME/.Orion.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
