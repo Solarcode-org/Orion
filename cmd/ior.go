@@ -26,26 +26,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// iorCmd represents the ior command
+/*
+Run an individual Orion source file.
+
+Usage:
+
+	orion ior [flags]
+
+Examples:
+# Run foo.or
+
+	$ orion ior foo.or
+
+Flags:
+
+	-h, --help   help for ior
+
+Global Flags:
+
+	    --config string    config file (default is $HOME/.orion.yaml)
+	-v, --verbose uint32   config file (default is $HOME/.Orion.yaml)
+*/
 var iorCmd = &cobra.Command{
 	Use:   "ior",
 	Short: "Run an individual Orion source file",
 	Long:  `Run an individual Orion source file.`,
 	Example: `# Run foo.or
 	$ orion ior foo.or`,
-	/*Cobra is a CLI library for Go that empowers applications.
-	This application is a tool to generate the needed files
-	to quickly create a Cobra application.*/
 
 	PreRun: toggleDebug,
 	Args:   cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Tracef("started `orion ior` with args %v\n", args)
 
-		// builtins.MakeFunctions()
-
 		contents, err := os.ReadFile(args[0])
-		lib.HandleFatal(err)
+		lib.CheckErr(err)
 
 		contents = append(contents, "\n"...)
 
@@ -55,25 +70,7 @@ var iorCmd = &cobra.Command{
 			lib.FailParse(errs)
 		}
 
-		log.Tracef("Parsed into Abstract Syntax Tree: %v", astree)
-
-		// for i := 0; i < len(astree); i++ {
-		// 	funcCall := astree[i]
-
-		// 	if function, ok := builtins.Functions[funcCall.Name]; ok {
-		// 		_, err := function(funcCall.Args)
-		// 		if err != nil {
-		// 			log.Fatalf("%s: %s\n", funcCall.Name, err)
-		// 		}
-		// 	} else {
-		// 		caser := cases.Title(language.AmericanEnglish)
-
-		// 		if _, ok := builtins.Functions[caser.String(funcCall.Name)]; ok {
-		// 			log.Fatalf("Could not find function: %s\nDid you mean: %s?\n", funcCall.Name, caser.String(funcCall.Name))
-		// 		}
-		// 		log.Fatalf("Could not find function: %s\nMaybe you forgot to add a module prefix?\n", funcCall.Name)
-		// 	}
-		// }
+		log.Tracef("Parsed into Abstract Syntax Tree: %v\n", astree)
 
 		builtins.MakeFunctions()
 

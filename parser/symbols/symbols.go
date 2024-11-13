@@ -23,10 +23,12 @@ const(
 	NT_DataList 
 	NT_FuncCall 
 	NT_Import 
+	NT_Number 
 	NT_Orion 
 	NT_Package 
 	NT_Statement 
 	NT_Statements 
+	NT_String 
 )
 
 // T is the type of terminals symbols
@@ -36,11 +38,13 @@ const(
 	T_1  // ) 
 	T_2  // , 
 	T_3  // block_comment 
-	T_4  // get 
-	T_5  // ident 
-	T_6  // line_comment 
-	T_7  // package 
-	T_8  // string_lit 
+	T_4  // float 
+	T_5  // get 
+	T_6  // ident 
+	T_7  // integer 
+	T_8  // line_comment 
+	T_9  // package 
+	T_10  // string_lit 
 )
 
 type Symbols []Symbol
@@ -112,10 +116,12 @@ var ntToString = []string {
 	"DataList", /* NT_DataList */
 	"FuncCall", /* NT_FuncCall */
 	"Import", /* NT_Import */
+	"Number", /* NT_Number */
 	"Orion", /* NT_Orion */
 	"Package", /* NT_Package */
 	"Statement", /* NT_Statement */
-	"Statements", /* NT_Statements */ 
+	"Statements", /* NT_Statements */
+	"String", /* NT_String */ 
 }
 
 var tToString = []string { 
@@ -123,11 +129,13 @@ var tToString = []string {
 	")", /* T_1 */
 	",", /* T_2 */
 	"block_comment", /* T_3 */
-	"get", /* T_4 */
-	"ident", /* T_5 */
-	"line_comment", /* T_6 */
-	"package", /* T_7 */
-	"string_lit", /* T_8 */ 
+	"float", /* T_4 */
+	"get", /* T_5 */
+	"ident", /* T_6 */
+	"integer", /* T_7 */
+	"line_comment", /* T_8 */
+	"package", /* T_9 */
+	"string_lit", /* T_10 */ 
 }
 
 var stringNT = map[string]NT{ 
@@ -135,8 +143,10 @@ var stringNT = map[string]NT{
 	"DataList":NT_DataList,
 	"FuncCall":NT_FuncCall,
 	"Import":NT_Import,
+	"Number":NT_Number,
 	"Orion":NT_Orion,
 	"Package":NT_Package,
 	"Statement":NT_Statement,
 	"Statements":NT_Statements,
+	"String":NT_String,
 }

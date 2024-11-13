@@ -26,13 +26,8 @@ import (
 	"github.com/Solarcode-org/Orion/lib"
 )
 
-// 	"bufio"
-// 	"fmt"
-// 	"os"
-// 	"strings"
-
-// 	"github.com/Solarcode-org/Orion/lib"
-
+// add_fmt_mod adds the standard input/output module ("fmt"), along with the
+// Print, Println and Input functions.
 func add_fmt_mod(functions FunctionsType) {
 	functions["Println"] = fmt_println
 	functions["Print"] = fmt_print

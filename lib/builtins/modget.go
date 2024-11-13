@@ -23,6 +23,7 @@ import (
 	"github.com/Solarcode-org/Orion/ast"
 )
 
+// add_modgetter adds import functionality to Orion.
 func add_modgetter(functions FunctionsType) {
 	functions["get"] = func(data []*ast.Expr) (ast.Expr, error) {
 		for i := 0; i < len(data); i++ {

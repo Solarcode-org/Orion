@@ -40,6 +40,12 @@ ident : letter {letter|number|'_'|'?'|'/'} ;
 string_lit : '"' <not "\\\"" | '\\' any "\\\"nrt"> '"' ;
 ```
 
+### Integers and Floats:
+```
+integer : number {number} ;
+float : integer ['.' integer] ;
+```
+
 ## The Orion Rule
 
 It is the root rule for all statements in Orion.
@@ -123,8 +129,24 @@ DataList
 
 ## The Data Rule
 
-It represents all data types in Orion: string, numbers (_TODO_), etc.
+It represents all data types in Orion: string, numbers, etc.
 
 ```
-Data : string_lit | FuncCall ;
+Data : String | FuncCall | Number ;
+```
+
+### The String Rule
+
+It represents all quoted strings in Orion.
+
+```
+String : string_lit ;
+```
+
+### The Number Rule
+
+It represents all integers and floating-point numbers in Orion.
+
+```
+Number : integer | float ;
 ```

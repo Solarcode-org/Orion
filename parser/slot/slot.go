@@ -16,6 +16,8 @@ const(
 	Data0R1
 	Data1R0
 	Data1R1
+	Data2R0
+	Data2R1
 	DataList0R0
 	DataList0R1
 	DataList1R0
@@ -30,6 +32,10 @@ const(
 	Import0R0
 	Import0R1
 	Import0R2
+	Number0R0
+	Number0R1
+	Number1R0
+	Number1R1
 	Orion0R0
 	Orion0R1
 	Orion0R2
@@ -45,6 +51,8 @@ const(
 	Statements1R0
 	Statements1R1
 	Statements1R2
+	String0R0
+	String0R1
 )
 
 type Slot struct {
@@ -137,14 +145,14 @@ var slots = map[Label]*Slot{
 	Data0R0: {
 		symbols.NT_Data, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_8,
+			symbols.NT_String,
 		}, 
 		Data0R0, 
 	},
 	Data0R1: {
 		symbols.NT_Data, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_8,
+			symbols.NT_String,
 		}, 
 		Data0R1, 
 	},
@@ -161,6 +169,20 @@ var slots = map[Label]*Slot{
 			symbols.NT_FuncCall,
 		}, 
 		Data1R1, 
+	},
+	Data2R0: {
+		symbols.NT_Data, 2, 0, 
+		symbols.Symbols{  
+			symbols.NT_Number,
+		}, 
+		Data2R0, 
+	},
+	Data2R1: {
+		symbols.NT_Data, 2, 1, 
+		symbols.Symbols{  
+			symbols.NT_Number,
+		}, 
+		Data2R1, 
 	},
 	DataList0R0: {
 		symbols.NT_DataList, 0, 0, 
@@ -215,7 +237,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R0: {
 		symbols.NT_FuncCall, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_6, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -225,7 +247,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R1: {
 		symbols.NT_FuncCall, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_6, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -235,7 +257,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R2: {
 		symbols.NT_FuncCall, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_6, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -245,7 +267,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R3: {
 		symbols.NT_FuncCall, 0, 3, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_6, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -255,7 +277,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R4: {
 		symbols.NT_FuncCall, 0, 4, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_6, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -265,7 +287,7 @@ var slots = map[Label]*Slot{
 	Import0R0: {
 		symbols.NT_Import, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_4, 
+			symbols.T_5, 
 			symbols.NT_DataList,
 		}, 
 		Import0R0, 
@@ -273,7 +295,7 @@ var slots = map[Label]*Slot{
 	Import0R1: {
 		symbols.NT_Import, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_4, 
+			symbols.T_5, 
 			symbols.NT_DataList,
 		}, 
 		Import0R1, 
@@ -281,10 +303,38 @@ var slots = map[Label]*Slot{
 	Import0R2: {
 		symbols.NT_Import, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_4, 
+			symbols.T_5, 
 			symbols.NT_DataList,
 		}, 
 		Import0R2, 
+	},
+	Number0R0: {
+		symbols.NT_Number, 0, 0, 
+		symbols.Symbols{  
+			symbols.T_7,
+		}, 
+		Number0R0, 
+	},
+	Number0R1: {
+		symbols.NT_Number, 0, 1, 
+		symbols.Symbols{  
+			symbols.T_7,
+		}, 
+		Number0R1, 
+	},
+	Number1R0: {
+		symbols.NT_Number, 1, 0, 
+		symbols.Symbols{  
+			symbols.T_4,
+		}, 
+		Number1R0, 
+	},
+	Number1R1: {
+		symbols.NT_Number, 1, 1, 
+		symbols.Symbols{  
+			symbols.T_4,
+		}, 
+		Number1R1, 
 	},
 	Orion0R0: {
 		symbols.NT_Orion, 0, 0, 
@@ -313,24 +363,24 @@ var slots = map[Label]*Slot{
 	Package0R0: {
 		symbols.NT_Package, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_7, 
-			symbols.T_8,
+			symbols.T_9, 
+			symbols.T_10,
 		}, 
 		Package0R0, 
 	},
 	Package0R1: {
 		symbols.NT_Package, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_7, 
-			symbols.T_8,
+			symbols.T_9, 
+			symbols.T_10,
 		}, 
 		Package0R1, 
 	},
 	Package0R2: {
 		symbols.NT_Package, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_7, 
-			symbols.T_8,
+			symbols.T_9, 
+			symbols.T_10,
 		}, 
 		Package0R2, 
 	},
@@ -400,6 +450,20 @@ var slots = map[Label]*Slot{
 		}, 
 		Statements1R2, 
 	},
+	String0R0: {
+		symbols.NT_String, 0, 0, 
+		symbols.Symbols{  
+			symbols.T_10,
+		}, 
+		String0R0, 
+	},
+	String0R1: {
+		symbols.NT_String, 0, 1, 
+		symbols.Symbols{  
+			symbols.T_10,
+		}, 
+		String0R1, 
+	},
 }
 
 var slotIndex = map[Index]Label { 
@@ -407,6 +471,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Data,0,1 }: Data0R1,
 	Index{ symbols.NT_Data,1,0 }: Data1R0,
 	Index{ symbols.NT_Data,1,1 }: Data1R1,
+	Index{ symbols.NT_Data,2,0 }: Data2R0,
+	Index{ symbols.NT_Data,2,1 }: Data2R1,
 	Index{ symbols.NT_DataList,0,0 }: DataList0R0,
 	Index{ symbols.NT_DataList,0,1 }: DataList0R1,
 	Index{ symbols.NT_DataList,1,0 }: DataList1R0,
@@ -421,6 +487,10 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Import,0,0 }: Import0R0,
 	Index{ symbols.NT_Import,0,1 }: Import0R1,
 	Index{ symbols.NT_Import,0,2 }: Import0R2,
+	Index{ symbols.NT_Number,0,0 }: Number0R0,
+	Index{ symbols.NT_Number,0,1 }: Number0R1,
+	Index{ symbols.NT_Number,1,0 }: Number1R0,
+	Index{ symbols.NT_Number,1,1 }: Number1R1,
 	Index{ symbols.NT_Orion,0,0 }: Orion0R0,
 	Index{ symbols.NT_Orion,0,1 }: Orion0R1,
 	Index{ symbols.NT_Orion,0,2 }: Orion0R2,
@@ -436,6 +506,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Statements,1,0 }: Statements1R0,
 	Index{ symbols.NT_Statements,1,1 }: Statements1R1,
 	Index{ symbols.NT_Statements,1,2 }: Statements1R2,
+	Index{ symbols.NT_String,0,0 }: String0R0,
+	Index{ symbols.NT_String,0,1 }: String0R1,
 }
 
 var alternates = map[symbols.NT][]Label{ 
@@ -446,6 +518,8 @@ var alternates = map[symbols.NT][]Label{
 	symbols.NT_FuncCall:[]Label{ FuncCall0R0 },
 	symbols.NT_Import:[]Label{ Import0R0 },
 	symbols.NT_DataList:[]Label{ DataList0R0,DataList1R0 },
-	symbols.NT_Data:[]Label{ Data0R0,Data1R0 },
+	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0 },
+	symbols.NT_String:[]Label{ String0R0 },
+	symbols.NT_Number:[]Label{ Number0R0,Number1R0 },
 }
 

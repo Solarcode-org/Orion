@@ -39,31 +39,34 @@ func GetAbstractSyntaxTree(src []byte) ([]*ast.Expr, []*parser.Error) {
 		return nil, errs
 	}
 
-	ast := buildRoot(bsrSet.GetRoot())
+	ast := buildAST(bsrSet.GetRoot())
 
 	log.Traceln("successfully ended function `lib.GetAbstractSyntaxTree`")
 	return ast, nil
 }
 
-// HandleFatal checks if an error value is not nil and runs `log.Fatalln` for the error.
-func HandleFatal(err error) {
+// CheckErr checks if an error value is not nil and runs [log.Fatalln] for the error.
+func CheckErr(err error) {
 	if err != nil {
 		log.Fatalln(err)
 	}
 }
 
+// NoArgs checks if the list of args is empty. If not, [log.Fatalf] is called.
 func NoArgs(funcname string, data []*ast.Expr) {
 	if len(data) > 0 {
 		log.Fatalf("%s: expected no arguments, got %d\n", funcname, len(data))
 	}
 }
 
+// ExactArgs checks if the number of args matches `amount`. If not, [log.Fatalf] is called.
 func ExactArgs(funcname string, data []*ast.Expr, amount int) {
 	if len(data) != amount {
 		log.Fatalf("%s: expected exactly %d arguments, got %d\n", funcname, amount, len(data))
 	}
 }
 
+// RunFunc contains the functionality for running an Orion function.
 func RunFunc(funcCall ast.Expr, functions map[string]func([]*ast.Expr) (ast.Expr, error)) ast.Expr {
 	if function, ok := functions[funcCall.Id]; ok {
 		value, err := function(funcCall.Args)
@@ -84,7 +87,7 @@ func RunFunc(funcCall ast.Expr, functions map[string]func([]*ast.Expr) (ast.Expr
 	return ast.Expr{}
 }
 
-// Print all the errors with the same line number as errs[0] and exit(1)
+// FailParse prints all the errors with the same line number as `errs[0]` and exits with code 1.
 func FailParse(errs []*parser.Error) {
 	fmt.Println("Parse Errors:")
 	ln := errs[0].Line

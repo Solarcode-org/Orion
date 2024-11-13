@@ -1,4 +1,10 @@
 package "_examples/main"
-get "fmt"
 Println("Hi","user!")
-Println(Join("hi", "hello"))
+fmt/Join("hi","hello")
+Sum(0.1, 0.2)
+Difference(0.1, 0.2)
+Product(0.1, 3.0)
+Quotient(0.1, 3.0)
+math/Round(0.567854)
+math/Ceil(2.05)
+math/Floor(2.05)

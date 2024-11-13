@@ -65,10 +65,11 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 		// p.DumpDescriptors()
 
 		switch L {
-		case slot.Data0R0: // Data : ∙string_lit
+		case slot.Data0R0: // Data : ∙String
 
-			p.bsrSet.Add(slot.Data0R1, cU, p.cI, p.cI+1)
-			p.cI++
+			p.call(slot.Data0R1, cU, p.cI)
+		case slot.Data0R1: // Data : String ∙
+
 			if p.follow(symbols.NT_Data) {
 				p.rtn(symbols.NT_Data, cU, p.cI)
 			} else {
@@ -83,6 +84,16 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 				p.rtn(symbols.NT_Data, cU, p.cI)
 			} else {
 				p.parseError(slot.Data1R0, p.cI, followSets[symbols.NT_Data])
+			}
+		case slot.Data2R0: // Data : ∙Number
+
+			p.call(slot.Data2R1, cU, p.cI)
+		case slot.Data2R1: // Data : Number ∙
+
+			if p.follow(symbols.NT_Data) {
+				p.rtn(symbols.NT_Data, cU, p.cI)
+			} else {
+				p.parseError(slot.Data2R0, p.cI, followSets[symbols.NT_Data])
 			}
 		case slot.DataList0R0: // DataList : ∙Data
 
@@ -167,6 +178,24 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 			} else {
 				p.parseError(slot.Import0R0, p.cI, followSets[symbols.NT_Import])
 			}
+		case slot.Number0R0: // Number : ∙integer
+
+			p.bsrSet.Add(slot.Number0R1, cU, p.cI, p.cI+1)
+			p.cI++
+			if p.follow(symbols.NT_Number) {
+				p.rtn(symbols.NT_Number, cU, p.cI)
+			} else {
+				p.parseError(slot.Number0R0, p.cI, followSets[symbols.NT_Number])
+			}
+		case slot.Number1R0: // Number : ∙float
+
+			p.bsrSet.Add(slot.Number1R1, cU, p.cI, p.cI+1)
+			p.cI++
+			if p.follow(symbols.NT_Number) {
+				p.rtn(symbols.NT_Number, cU, p.cI)
+			} else {
+				p.parseError(slot.Number1R0, p.cI, followSets[symbols.NT_Number])
+			}
 		case slot.Orion0R0: // Orion : ∙Package Statements
 
 			p.call(slot.Orion0R1, cU, p.cI)
@@ -248,6 +277,15 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 				p.rtn(symbols.NT_Statements, cU, p.cI)
 			} else {
 				p.parseError(slot.Statements1R0, p.cI, followSets[symbols.NT_Statements])
+			}
+		case slot.String0R0: // String : ∙string_lit
+
+			p.bsrSet.Add(slot.String0R1, cU, p.cI, p.cI+1)
+			p.cI++
+			if p.follow(symbols.NT_String) {
+				p.rtn(symbols.NT_String, cU, p.cI)
+			} else {
+				p.parseError(slot.String0R0, p.cI, followSets[symbols.NT_String])
 			}
 
 		default:
@@ -495,47 +533,64 @@ func (p *parser) testSelect(l slot.Label) bool {
 }
 
 var first = []map[token.Type]string{
-	// Data : ∙string_lit
+	// Data : ∙String
 	{
-		token.T_8: "string_lit",
+		token.T_10: "string_lit",
 	},
-	// Data : string_lit ∙
+	// Data : String ∙
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Data : ∙FuncCall
 	{
-		token.T_5: "ident",
+		token.T_6: "ident",
 	},
 	// Data : FuncCall ∙
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// Data : ∙Number
+	{
+		token.T_4: "float",
+		token.T_7: "integer",
+	},
+	// Data : Number ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// DataList : ∙Data
 	{
-		token.T_5: "ident",
-		token.T_8: "string_lit",
+		token.T_4:  "float",
+		token.T_6:  "ident",
+		token.T_7:  "integer",
+		token.T_10: "string_lit",
 	},
 	// DataList : Data ∙
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// DataList : ∙DataList , Data
 	{
-		token.T_5: "ident",
-		token.T_8: "string_lit",
+		token.T_4:  "float",
+		token.T_6:  "ident",
+		token.T_7:  "integer",
+		token.T_10: "string_lit",
 	},
 	// DataList : DataList ∙, Data
 	{
@@ -543,20 +598,22 @@ var first = []map[token.Type]string{
 	},
 	// DataList : DataList , ∙Data
 	{
-		token.T_5: "ident",
-		token.T_8: "string_lit",
+		token.T_4:  "float",
+		token.T_6:  "ident",
+		token.T_7:  "integer",
+		token.T_10: "string_lit",
 	},
 	// DataList : DataList , Data ∙
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// FuncCall : ∙ident ( DataList )
 	{
-		token.T_5: "ident",
+		token.T_6: "ident",
 	},
 	// FuncCall : ident ∙( DataList )
 	{
@@ -564,8 +621,10 @@ var first = []map[token.Type]string{
 	},
 	// FuncCall : ident ( ∙DataList )
 	{
-		token.T_5: "ident",
-		token.T_8: "string_lit",
+		token.T_4:  "float",
+		token.T_6:  "ident",
+		token.T_7:  "integer",
+		token.T_10: "string_lit",
 	},
 	// FuncCall : ident ( DataList ∙)
 	{
@@ -576,32 +635,58 @@ var first = []map[token.Type]string{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Import : ∙get DataList
 	{
-		token.T_4: "get",
+		token.T_5: "get",
 	},
 	// Import : get ∙DataList
 	{
-		token.T_5: "ident",
-		token.T_8: "string_lit",
+		token.T_4:  "float",
+		token.T_6:  "ident",
+		token.T_7:  "integer",
+		token.T_10: "string_lit",
 	},
 	// Import : get DataList ∙
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// Number : ∙integer
+	{
+		token.T_7: "integer",
+	},
+	// Number : integer ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// Number : ∙float
+	{
+		token.T_4: "float",
+	},
+	// Number : float ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Orion : ∙Package Statements
 	{
-		token.T_7: "package",
+		token.T_9: "package",
 	},
 	// Orion : Package ∙Statements
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Orion : Package Statements ∙
 	{
@@ -609,63 +694,75 @@ var first = []map[token.Type]string{
 	},
 	// Package : ∙package string_lit
 	{
-		token.T_7: "package",
+		token.T_9: "package",
 	},
 	// Package : package ∙string_lit
 	{
-		token.T_8: "string_lit",
+		token.T_10: "string_lit",
 	},
 	// Package : package string_lit ∙
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statement : ∙FuncCall
 	{
-		token.T_5: "ident",
+		token.T_6: "ident",
 	},
 	// Statement : FuncCall ∙
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statement : ∙Import
 	{
-		token.T_4: "get",
+		token.T_5: "get",
 	},
 	// Statement : Import ∙
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements : ∙Statement
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements : Statement ∙
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements : ∙Statements Statement
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements : Statements ∙Statement
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements : Statements Statement ∙
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// String : ∙string_lit
+	{
+		token.T_10: "string_lit",
+	},
+	// String : string_lit ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 }
 
@@ -675,30 +772,38 @@ var followSets = []map[token.Type]string{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// DataList
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// FuncCall
 	{
 		token.EOF: "$",
 		token.T_1: ")",
 		token.T_2: ",",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Import
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// Number
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Orion
 	{
@@ -706,20 +811,28 @@ var followSets = []map[token.Type]string{
 	},
 	// Package
 	{
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statement
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 	// Statements
 	{
 		token.EOF: "$",
-		token.T_4: "get",
-		token.T_5: "ident",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// String
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
 	},
 }
 
