@@ -20,16 +20,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Solarcode-org/Orion/lib/ast"
+	"github.com/Solarcode-org/Orion/ast"
 )
 
+// add_modgetter adds import functionality to Orion.
 func add_modgetter(functions FunctionsType) {
-	functions["get"] = func(data ast.DataList) (ast.Data, error) {
+	functions["get"] = func(data []*ast.Expr) (ast.Expr, error) {
 		for i := 0; i < len(data); i++ {
 			module := data[i]
 
-			if module.Type != ast.String && module.Type != ast.Ident {
-				return ast.None, fmt.Errorf("get: expected string or identifier as module arguments")
+			if module.Type != ast.Expr_String /* && module.Type != ast.Ident */ {
+				return ast.Expr{}, fmt.Errorf("get: expected string or identifier as module arguments")
 			}
 
 			keys := make([]string, 0, len(functions))
@@ -38,12 +39,12 @@ func add_modgetter(functions FunctionsType) {
 			}
 
 			for _, key := range keys {
-				if strings.Split(key, "/")[0] == module.Data {
+				if strings.Split(key, "/")[0] == module.Id {
 					functions[strings.Split(key, "/")[1]] = functions[key]
 				}
 			}
 		}
 
-		return ast.None, nil
+		return ast.Expr{}, nil
 	}
 }

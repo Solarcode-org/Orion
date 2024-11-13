@@ -25,7 +25,34 @@ import (
 
 var path string
 
-// manpagesCmd represents the manpages command
+/*
+Generate manpages for Orion.
+
+Cobra is a CLI library for Go that empowers applications.
+Specifiy the '-P' flag to generate manpages in custom directory (default=./manpages/)
+
+Usage:
+
+	orion manpages [flags]
+
+Examples:
+# Generate manpages in default directory.
+
+	$ orion manpages
+
+	# Generate manpages in foo directory
+	$ orion manpages -P foo
+
+Flags:
+
+	-h, --help          help for manpages
+	-P, --path string   Custom directory to generate manpages in (default "./manpages")
+
+Global Flags:
+
+	    --config string    config file (default is $HOME/.orion.yaml)
+	-v, --verbose uint32   config file (default is $HOME/.Orion.yaml)
+*/
 var manpagesCmd = &cobra.Command{
 	Use:   "manpages",
 	Short: "Generate manpages for Orion",
@@ -51,7 +78,7 @@ Specifiy the '-P' flag to generate manpages in custom directory (default=./manpa
 }
 
 func init() {
-	rootCmd.AddCommand(manpagesCmd)
+	RootCmd.AddCommand(manpagesCmd)
 
 	// Here you will define your flags and configuration settings.
 

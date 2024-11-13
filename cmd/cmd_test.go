@@ -14,30 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package builtins
+// Package cmd_test is for testing and benchmarking the commands of the Orion CLI.
+package cmd_test
 
 import (
-	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lib"
+	"testing"
+
+	"github.com/Solarcode-org/Orion/cmd"
 )
 
-// EvalArgs converts all the arguments of a function into usable values.
-// For example: evaluating function values befor use.
-func EvalArgs(data []*ast.Expr) []*ast.Expr {
-	args := make([]*ast.Expr, 0, len(data))
+// TestIor tests the help flag
+func TestIor(t *testing.T) {
+	cmd.RootCmd.SetArgs([]string{"ior", "--help"})
+	cmd.Execute()
+}
 
-	for i := 0; i < len(data); i++ {
-		datum := data[i]
+// BenchmarkExample measures the performance of the benchmarking example ([_examples/bench.or])
+func BenchmarkExample(b *testing.B) {
+	cmd.RootCmd.SetArgs([]string{"ior", "../_examples/bench.or"})
 
-		if datum.Type == ast.Expr_FuncCall {
-			value := lib.RunFunc(*datum, Functions)
-			args = append(args, &value)
-
-			continue
-		}
-
-		args = append(args, datum)
+	for i := 0; i < b.N; i++ {
+		cmd.Execute()
 	}
-
-	return args
 }

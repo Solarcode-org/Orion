@@ -23,15 +23,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// A PlainFormatter is used when the user has turned off logs (by default).
+// Here, the logs with level greater than the debug level [github.com/sirupsen/logrus#DebugLevel]
 type PlainFormatter struct {
 }
 
+// Formats the log entry into a custom form (for now the log message is returned as is)
 func (f *PlainFormatter) Format(entry *log.Entry) ([]byte, error) {
 	return []byte(fmt.Sprintf("%s\n", entry.Message)), nil
 }
+
+// toggleDebug is used for toggling logs (based on the `-v` or `verbose` flag)
 func toggleDebug(*cobra.Command, []string) {
 	if verbose > 0 {
-		log.Info("Debug logs enabled")
+		log.Infof("%s logs enabled\n", log.Level(verbose).String())
 		log.SetLevel(log.Level(verbose))
 		log.SetFormatter(&log.TextFormatter{})
 	} else {

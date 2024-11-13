@@ -19,11 +19,12 @@ package builtins
 import (
 	"fmt"
 
+	"github.com/Solarcode-org/Orion/ast"
 	"github.com/Solarcode-org/Orion/lib"
-	"github.com/Solarcode-org/Orion/lib/ast"
 	"github.com/shopspring/decimal"
 )
 
+// add_arithmetic_mod adds the `math` module and arithmetic functions.
 func add_arithmetic_mod(functions FunctionsType) {
 	functions["Sum"] = math_sum
 	functions["Difference"] = math_difference
@@ -38,143 +39,155 @@ func add_arithmetic_mod(functions FunctionsType) {
 	functions["math/Floor"] = math_floor
 }
 
-func math_sum(data ast.DataList) (ast.Data, error) {
+func math_sum(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	result := decimal.Zero
 
 	for i := 0; i < len(args); i++ {
 		datum := args[i]
 
-		if datum.Type != ast.Int && datum.Type != ast.Float {
-			return ast.None, fmt.Errorf("sum: expected arguments to be of type integer or float")
+		if datum.Type != ast.Expr_Number {
+			return ast.Expr{}, fmt.Errorf("sum: expected arguments to be of type integer or float")
 		}
 
-		num, err := decimal.NewFromString(datum.Data)
-		lib.HandleFatal(err)
+		num, err := decimal.NewFromString(datum.Id)
+		lib.CheckErr(err)
 
 		result = result.Add(num)
 	}
 
-	return ast.Data{
-		Data: fmt.Sprint(result),
-		Type: ast.Int,
+	return ast.Expr{
+		Id:   result.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_difference(data ast.DataList) (ast.Data, error) {
+func math_difference(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("difference", args, 2)
 
-	if data[0].Type != ast.Int && data[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("difference: expected arguments to be of type integer or float")
+	if data[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("difference: expected arguments to be of type integer or float")
 	}
-	result, err := decimal.NewFromString(args[0].Data)
-	lib.HandleFatal(err)
+	result, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
-	if data[1].Type != ast.Int && data[1].Type != ast.Float {
-		return ast.None, fmt.Errorf("difference: expected arguments to be of type integer or float")
+	if data[1].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("difference: expected arguments to be of type integer or float")
 	}
-	subtrahend, err := decimal.NewFromString(args[1].Data)
-	lib.HandleFatal(err)
+	subtrahend, err := decimal.NewFromString(args[1].Id)
+	lib.CheckErr(err)
 
 	result = result.Sub(subtrahend)
 
-	return ast.Data{
-		Data: fmt.Sprint(result),
-		Type: ast.Int,
+	return ast.Expr{
+		Id:   result.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_product(data ast.DataList) (ast.Data, error) {
+func math_product(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 
-	if args[0].Type != ast.Int && args[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("product: expected arguments to be of type integer or float")
+	if args[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("product: expected arguments to be of type integer or float")
 	}
-	result, err := decimal.NewFromString(args[0].Data)
-	lib.HandleFatal(err)
+	result, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
 	for i := 0; i < len(args)-1; i++ {
 		datum := args[i+1]
 
-		if datum.Type != ast.Int && datum.Type != ast.Float {
-			return ast.None, fmt.Errorf("product: expected arguments to be of type integer or float")
+		if datum.Type != ast.Expr_Number {
+			return ast.Expr{}, fmt.Errorf("product: expected arguments to be of type integer or float")
 		}
 
-		num, err := decimal.NewFromString(datum.Data)
-		lib.HandleFatal(err)
+		num, err := decimal.NewFromString(datum.Id)
+		lib.CheckErr(err)
 
 		result = result.Mul(num)
 	}
 
-	return ast.Data{
-		Data: fmt.Sprint(result),
-		Type: ast.Int,
+	return ast.Expr{
+		Id:   result.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_quotient(data ast.DataList) (ast.Data, error) {
+func math_quotient(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("quotient", args, 2)
 
-	if data[0].Type != ast.Int && data[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("quotient: expected arguments to be of type integer or float")
+	if data[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("quotient: expected arguments to be of type integer or float")
 	}
-	result, err := decimal.NewFromString(args[0].Data)
-	lib.HandleFatal(err)
+	result, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
-	if data[1].Type != ast.Int && data[1].Type != ast.Float {
-		return ast.None, fmt.Errorf("quotient: expected arguments to be of type integer or float")
+	if data[1].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("quotient: expected arguments to be of type integer or float")
 	}
-	divider, err := decimal.NewFromString(args[1].Data)
-	lib.HandleFatal(err)
+	divider, err := decimal.NewFromString(args[1].Id)
+	lib.CheckErr(err)
 
 	result = result.Div(divider)
 
-	return ast.Data{
-		Data: fmt.Sprint(result),
-		Type: ast.Int,
+	return ast.Expr{
+		Id:   result.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_round(data ast.DataList) (ast.Data, error) {
+func math_round(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("math/round", args, 1)
 
-	if data[0].Type != ast.Int && data[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("math/round: expected arguments to be of type integer or float")
+	if data[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("math/round: expected arguments to be of type integer or float")
 	}
+	num, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
-	return ast.Data{
-		Data: "0",
-		Type: ast.Int,
+	rounded := num.Round(0)
+
+	return ast.Expr{
+		Id:   rounded.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_ceil(data ast.DataList) (ast.Data, error) {
+func math_ceil(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("math/ceil", args, 1)
 
-	if data[0].Type != ast.Int && data[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("math/ceil: expected arguments to be of type integer or float")
+	if data[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("math/ceil: expected arguments to be of type integer or float")
 	}
+	num, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
-	return ast.Data{
-		Data: "0",
-		Type: ast.Int,
+	rounded := num.RoundCeil(0)
+
+	return ast.Expr{
+		Id:   rounded.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }
 
-func math_floor(data ast.DataList) (ast.Data, error) {
+func math_floor(data []*ast.Expr) (ast.Expr, error) {
 	args := EvalArgs(data)
 	lib.ExactArgs("math/floor", args, 1)
 
-	if data[0].Type != ast.Int && data[0].Type != ast.Float {
-		return ast.None, fmt.Errorf("math/floor: expected arguments to be of type integer or float")
+	if data[0].Type != ast.Expr_Number {
+		return ast.Expr{}, fmt.Errorf("math/floor: expected arguments to be of type integer or float")
 	}
+	num, err := decimal.NewFromString(args[0].Id)
+	lib.CheckErr(err)
 
-	return ast.Data{
-		Data: "0",
-		Type: ast.Int,
+	rounded := num.RoundFloor(0)
+
+	return ast.Expr{
+		Id:   rounded.String(),
+		Type: ast.Expr_Number,
 	}, nil
 }

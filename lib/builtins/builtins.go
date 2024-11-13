@@ -14,15 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// The standard library for Orion.
+// It contains all of the built-in functions, variables, types, etc. of Orion.
 package builtins
 
-import "github.com/Solarcode-org/Orion/lib/ast"
+import "github.com/Solarcode-org/Orion/ast"
 
+// A FunctionsType is a map of all functions ([OrionFunction]) in Orion.
 type FunctionsType = map[string]OrionFunction
-type OrionFunction = func(ast.DataList) (ast.Data, error)
 
+// An OrionFunction represents a function in Orion.
+type OrionFunction = func([]*ast.Expr) (ast.Expr, error)
+
+// Functions map containing all functions in Orion
 var Functions FunctionsType
 
+// Initialize the functions map for use.
+// NOTE: This must be called before any usage of the [Functions] variable.
 func MakeFunctions() {
 	Functions = make(FunctionsType)
 

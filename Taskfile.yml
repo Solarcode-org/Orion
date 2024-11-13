@@ -3,38 +3,48 @@
 version: "3"
 
 vars:
-  GRAMMAR_DIR: lib
-  GRAMMAR_FILE: orion.bnf
+  GRAMMAR_FILE: orion.md
+  FILE: _examples/main.or
 
 tasks:
   grammar:
-    cmd: "cd {{.GRAMMAR_DIR}} && gocc {{.GRAMMAR_FILE}}"
+    cmd: "gogll {{.GRAMMAR_FILE}}"
     silent: true
 
   grammar_verbose:
-    cmd: "cd {{.GRAMMAR_DIR}} && gocc -v {{.GRAMMAR_FILE}}"
+    cmd: "gogll -v {{.GRAMMAR_FILE}}"
     silent: true
 
   dev:
     deps:
       - grammar
-    cmd: "go run . ior _examples/main.or -v6"
+    cmd: "go run . ior {{.FILE}} -v5"
     interactive: true
 
   dev_verbose:
     deps:
       - grammar_verbose
-    cmd: "go run . ior _examples/main.or -v6"
+    cmd: "go run . ior {{.FILE}} -v5"
     interactive: true
 
   pre:
     deps:
       - grammar
-    cmd: "go run . ior _examples/main.or"
+    cmd: "go run . ior {{.FILE}}"
     interactive: true
 
   pre_verbose:
     deps:
       - grammar_verbose
-    cmd: "go run . ior _examples/main.or"
+    cmd: "go run . ior {{.FILE}}"
     interactive: true
+
+  test:
+    deps:
+      - grammar
+    cmd: "go test ./..."
+
+  bench:
+    deps:
+      - grammar
+    cmd: "go test -benchmem -run=^$ -bench=./... ./..."

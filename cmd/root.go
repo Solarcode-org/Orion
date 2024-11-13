@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package cmd contains the code for the Orion CLI.
+// It contains the following commands:
+//   - ior
+//   - manpages
 package cmd
 
 import (
@@ -24,11 +28,40 @@ import (
 	"github.com/spf13/viper"
 )
 
+// cfgFile represents the configuration file for this CLI.
 var cfgFile string
-var verbose uint32
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+// verbose represents the verbosity level (0-6)
+var verbose uint8
+
+/*
+Orion is the CLI tool for the Orion programming language.
+
+The Orion programming language was invented in 2024 by
+Arnab Phukan. It was made to combine the speed of Go,
+security of Rust and efficiency of Python. It is a
+compiled language.
+
+Usage:
+
+	orion [command]
+
+Available Commands:
+
+	completion  Generate the autocompletion script for the specified shell
+	help        Help about any command
+	ior         Run an individual Orion source file
+	manpages    Generate manpages for Orion
+
+Flags:
+
+	    --config string   config file (default is $HOME/.orion.yaml)
+	-h, --help            help for orion
+	-v, --verbose uint8   config file (default is $HOME/.Orion.yaml)
+
+Use "orion [command] --help" for more information about a command.
+*/
+var RootCmd = &cobra.Command{
 	Use:   "orion",
 	Short: "Orion is the CLI tool for the Orion programming language",
 	Long: `Orion is the CLI tool for the Orion programming language.
@@ -46,7 +79,7 @@ compiled language.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -59,8 +92,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orion.yaml)")
-	rootCmd.PersistentFlags().Uint32VarP(&verbose, "verbose", "v", 0, "config file (default is $HOME/.Orion.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orion.yaml)")
+	RootCmd.PersistentFlags().Uint8VarP(&verbose, "verbose", "v", 0, "config file (default is $HOME/.Orion.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

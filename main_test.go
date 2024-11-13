@@ -14,30 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package builtins
+// Package main_test is for just testing and benchmarking the root Orion CLI command (which is `orion` with no arguments)
+package main_test
 
 import (
-	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lib"
+	"testing"
+
+	"github.com/Solarcode-org/Orion/cmd"
 )
 
-// EvalArgs converts all the arguments of a function into usable values.
-// For example: evaluating function values befor use.
-func EvalArgs(data []*ast.Expr) []*ast.Expr {
-	args := make([]*ast.Expr, 0, len(data))
+// TestMainHelp tests the root command.
+func TestMainHelp(t *testing.T) {
+	cmd.Execute()
+}
 
-	for i := 0; i < len(data); i++ {
-		datum := data[i]
-
-		if datum.Type == ast.Expr_FuncCall {
-			value := lib.RunFunc(*datum, Functions)
-			args = append(args, &value)
-
-			continue
-		}
-
-		args = append(args, datum)
+// BenchmarkMainHelp measures the performance the root command.
+func BenchmarkMainHelp(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		cmd.Execute()
 	}
-
-	return args
 }
