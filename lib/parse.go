@@ -1,3 +1,19 @@
+/*
+Copyright © 2024 Arnab Phukan <iamarnab.phukan@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package lib
 
 import (
@@ -10,45 +26,47 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func buildRoot(b bsr.BSR) []*ast.Expr {
+// buildAST takes a non-terminal (`Orion`) as the `b` argument and builds it into
+// an Abstract Syntax tree.
+func buildAST(b bsr.BSR) []*ast.Expr {
 	nts := b.GetNTChildI(1).GetAllNTChildren()
 
 	exprs := make([]*ast.Expr, 0, len(nts))
 	for i := 0; i < len(nts); i++ {
 		nt := nts[i][0]
-		if nt.Label.Head() == symbols.NT_Statements {
-			child := nt.GetNTChildI(0)
+		statements := getStatements(nt)
 
-			if child.Label.Head() == symbols.NT_Statements && child.GetNTChildI(0).Label.Head() == symbols.NT_Statements {
-				// log.Fatalln("todo: Statements = Statements Statement")
-				statements := child.GetNTChildI(0).GetAllNTChildren()
+		for j := 0; j < len(statements); j++ {
+			bsr := statements[j].GetNTChildI(0)
 
-				for j := 0; j < len(statements); j++ {
-					statement := statements[j][0].GetNTChildI(0)
+			expr := buildExpr(bsr, nil)
 
-					expr := buildExpr(statement, nil)
-
-					exprs = append(exprs, expr)
-				}
-
-				nt = child.GetNTChildI(1)
-			} else if child.Label.Head() == symbols.NT_Statements {
-				nt = child.GetNTChildI(0)
-			} else {
-				nt = child
-			}
+			exprs = append(exprs, expr)
 		}
-
-		ntChild := nt.GetNTChildI(0)
-
-		expr := buildExpr(ntChild, nil)
-
-		exprs = append(exprs, expr)
 	}
 
 	return exprs
 }
 
+// getStatements converts the `Statement` and `Statements` non-terminals into an array of statements
+func getStatements(stmt bsr.BSR) []bsr.BSR {
+	if stmt.Label.Head() == symbols.NT_Statement {
+		return []bsr.BSR{stmt}
+	} else {
+		statements := []bsr.BSR{}
+		children := stmt.GetAllNTChildren()
+
+		for i := 0; i < len(children); i++ {
+			child := children[i][0]
+
+			statements = append(statements, getStatements(child)...)
+		}
+
+		return statements
+	}
+}
+
+// buildExpr takes any expression and builds it into an AST Node ([*ast.Expr])
 func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 	switch b.Label.Head() {
 	case symbols.NT_FuncCall:
@@ -98,22 +116,33 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 		}
 
 	case symbols.NT_Data:
-		if len(b.GetAllNTChildren()) > 0 {
-			child := b.GetNTChildI(0)
+		child := b.GetNTChildI(0)
 
+		switch child.Label.Head() {
+		case symbols.NT_FuncCall:
 			return buildExpr(child, nil)
 
-		} else {
-			quoted := b.GetTChildI(0).LiteralString()
+		case symbols.NT_String:
+			quoted := child.GetTChildI(0).LiteralString()
 			str, err := strconv.Unquote(quoted)
-			if err != nil {
-				log.Fatalln(err)
-			}
+			CheckErr(err)
 
 			return &ast.Expr{
 				Type: ast.Expr_String,
 				Id:   str,
 			}
+
+		case symbols.NT_Number:
+			number := child.GetTChildI(0).LiteralString()
+
+			return &ast.Expr{
+				Type: ast.Expr_Number,
+				Id:   number,
+			}
+
+		default:
+			log.Fatalf("reached invalid data type %s\n", child.Label.Head().String())
+			return nil
 		}
 
 	case symbols.NT_DataList:
@@ -150,6 +179,6 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 
 	default:
 		log.Fatalln("reached invalid parse", b.Label.Head())
-		return &ast.Expr{}
+		return nil
 	}
 }
