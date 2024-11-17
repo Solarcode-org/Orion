@@ -95,6 +95,16 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 			} else {
 				p.parseError(slot.Data2R0, p.cI, followSets[symbols.NT_Data])
 			}
+		case slot.Data3R0: // Data : ∙Operation
+
+			p.call(slot.Data3R1, cU, p.cI)
+		case slot.Data3R1: // Data : Operation ∙
+
+			if p.follow(symbols.NT_Data) {
+				p.rtn(symbols.NT_Data, cU, p.cI)
+			} else {
+				p.parseError(slot.Data3R0, p.cI, followSets[symbols.NT_Data])
+			}
 		case slot.DataList0R0: // DataList : ∙Data
 
 			p.call(slot.DataList0R1, cU, p.cI)
@@ -195,6 +205,41 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 				p.rtn(symbols.NT_Number, cU, p.cI)
 			} else {
 				p.parseError(slot.Number1R0, p.cI, followSets[symbols.NT_Number])
+			}
+		case slot.Operation0R0: // Operation : ∙Number
+
+			p.call(slot.Operation0R1, cU, p.cI)
+		case slot.Operation0R1: // Operation : Number ∙
+
+			if p.follow(symbols.NT_Operation) {
+				p.rtn(symbols.NT_Operation, cU, p.cI)
+			} else {
+				p.parseError(slot.Operation0R0, p.cI, followSets[symbols.NT_Operation])
+			}
+		case slot.Operation1R0: // Operation : ∙Operation op Number
+
+			p.call(slot.Operation1R1, cU, p.cI)
+		case slot.Operation1R1: // Operation : Operation ∙op Number
+
+			if !p.testSelect(slot.Operation1R1) {
+				p.parseError(slot.Operation1R1, p.cI, first[slot.Operation1R1])
+				break
+			}
+
+			p.bsrSet.Add(slot.Operation1R2, cU, p.cI, p.cI+1)
+			p.cI++
+			if !p.testSelect(slot.Operation1R2) {
+				p.parseError(slot.Operation1R2, p.cI, first[slot.Operation1R2])
+				break
+			}
+
+			p.call(slot.Operation1R3, cU, p.cI)
+		case slot.Operation1R3: // Operation : Operation op Number ∙
+
+			if p.follow(symbols.NT_Operation) {
+				p.rtn(symbols.NT_Operation, cU, p.cI)
+			} else {
+				p.parseError(slot.Operation1R0, p.cI, followSets[symbols.NT_Operation])
 			}
 		case slot.Orion0R0: // Orion : ∙Package Statements
 
@@ -535,7 +580,7 @@ func (p *parser) testSelect(l slot.Label) bool {
 var first = []map[token.Type]string{
 	// Data : ∙String
 	{
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// Data : String ∙
 	{
@@ -570,12 +615,25 @@ var first = []map[token.Type]string{
 		token.T_5: "get",
 		token.T_6: "ident",
 	},
+	// Data : ∙Operation
+	{
+		token.T_4: "float",
+		token.T_7: "integer",
+	},
+	// Data : Operation ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
 	// DataList : ∙Data
 	{
 		token.T_4:  "float",
 		token.T_6:  "ident",
 		token.T_7:  "integer",
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// DataList : Data ∙
 	{
@@ -590,7 +648,7 @@ var first = []map[token.Type]string{
 		token.T_4:  "float",
 		token.T_6:  "ident",
 		token.T_7:  "integer",
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// DataList : DataList ∙, Data
 	{
@@ -601,7 +659,7 @@ var first = []map[token.Type]string{
 		token.T_4:  "float",
 		token.T_6:  "ident",
 		token.T_7:  "integer",
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// DataList : DataList , Data ∙
 	{
@@ -624,7 +682,7 @@ var first = []map[token.Type]string{
 		token.T_4:  "float",
 		token.T_6:  "ident",
 		token.T_7:  "integer",
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// FuncCall : ident ( DataList ∙)
 	{
@@ -647,7 +705,7 @@ var first = []map[token.Type]string{
 		token.T_4:  "float",
 		token.T_6:  "ident",
 		token.T_7:  "integer",
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// Import : get DataList ∙
 	{
@@ -666,6 +724,7 @@ var first = []map[token.Type]string{
 		token.T_2: ",",
 		token.T_5: "get",
 		token.T_6: "ident",
+		token.T_9: "op",
 	},
 	// Number : ∙float
 	{
@@ -678,10 +737,48 @@ var first = []map[token.Type]string{
 		token.T_2: ",",
 		token.T_5: "get",
 		token.T_6: "ident",
+		token.T_9: "op",
+	},
+	// Operation : ∙Number
+	{
+		token.T_4: "float",
+		token.T_7: "integer",
+	},
+	// Operation : Number ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+		token.T_9: "op",
+	},
+	// Operation : ∙Operation op Number
+	{
+		token.T_4: "float",
+		token.T_7: "integer",
+	},
+	// Operation : Operation ∙op Number
+	{
+		token.T_9: "op",
+	},
+	// Operation : Operation op ∙Number
+	{
+		token.T_4: "float",
+		token.T_7: "integer",
+	},
+	// Operation : Operation op Number ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+		token.T_9: "op",
 	},
 	// Orion : ∙Package Statements
 	{
-		token.T_9: "package",
+		token.T_10: "package",
 	},
 	// Orion : Package ∙Statements
 	{
@@ -694,11 +791,11 @@ var first = []map[token.Type]string{
 	},
 	// Package : ∙package string_lit
 	{
-		token.T_9: "package",
+		token.T_10: "package",
 	},
 	// Package : package ∙string_lit
 	{
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// Package : package string_lit ∙
 	{
@@ -754,7 +851,7 @@ var first = []map[token.Type]string{
 	},
 	// String : ∙string_lit
 	{
-		token.T_10: "string_lit",
+		token.T_11: "string_lit",
 	},
 	// String : string_lit ∙
 	{
@@ -804,6 +901,16 @@ var followSets = []map[token.Type]string{
 		token.T_2: ",",
 		token.T_5: "get",
 		token.T_6: "ident",
+		token.T_9: "op",
+	},
+	// Operation
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+		token.T_9: "op",
 	},
 	// Orion
 	{

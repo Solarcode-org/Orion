@@ -18,6 +18,8 @@ const(
 	Data1R1
 	Data2R0
 	Data2R1
+	Data3R0
+	Data3R1
 	DataList0R0
 	DataList0R1
 	DataList1R0
@@ -36,6 +38,12 @@ const(
 	Number0R1
 	Number1R0
 	Number1R1
+	Operation0R0
+	Operation0R1
+	Operation1R0
+	Operation1R1
+	Operation1R2
+	Operation1R3
 	Orion0R0
 	Orion0R1
 	Orion0R2
@@ -183,6 +191,20 @@ var slots = map[Label]*Slot{
 			symbols.NT_Number,
 		}, 
 		Data2R1, 
+	},
+	Data3R0: {
+		symbols.NT_Data, 3, 0, 
+		symbols.Symbols{  
+			symbols.NT_Operation,
+		}, 
+		Data3R0, 
+	},
+	Data3R1: {
+		symbols.NT_Data, 3, 1, 
+		symbols.Symbols{  
+			symbols.NT_Operation,
+		}, 
+		Data3R1, 
 	},
 	DataList0R0: {
 		symbols.NT_DataList, 0, 0, 
@@ -336,6 +358,56 @@ var slots = map[Label]*Slot{
 		}, 
 		Number1R1, 
 	},
+	Operation0R0: {
+		symbols.NT_Operation, 0, 0, 
+		symbols.Symbols{  
+			symbols.NT_Number,
+		}, 
+		Operation0R0, 
+	},
+	Operation0R1: {
+		symbols.NT_Operation, 0, 1, 
+		symbols.Symbols{  
+			symbols.NT_Number,
+		}, 
+		Operation0R1, 
+	},
+	Operation1R0: {
+		symbols.NT_Operation, 1, 0, 
+		symbols.Symbols{  
+			symbols.NT_Operation, 
+			symbols.T_9, 
+			symbols.NT_Number,
+		}, 
+		Operation1R0, 
+	},
+	Operation1R1: {
+		symbols.NT_Operation, 1, 1, 
+		symbols.Symbols{  
+			symbols.NT_Operation, 
+			symbols.T_9, 
+			symbols.NT_Number,
+		}, 
+		Operation1R1, 
+	},
+	Operation1R2: {
+		symbols.NT_Operation, 1, 2, 
+		symbols.Symbols{  
+			symbols.NT_Operation, 
+			symbols.T_9, 
+			symbols.NT_Number,
+		}, 
+		Operation1R2, 
+	},
+	Operation1R3: {
+		symbols.NT_Operation, 1, 3, 
+		symbols.Symbols{  
+			symbols.NT_Operation, 
+			symbols.T_9, 
+			symbols.NT_Number,
+		}, 
+		Operation1R3, 
+	},
 	Orion0R0: {
 		symbols.NT_Orion, 0, 0, 
 		symbols.Symbols{  
@@ -363,24 +435,24 @@ var slots = map[Label]*Slot{
 	Package0R0: {
 		symbols.NT_Package, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_9, 
-			symbols.T_10,
+			symbols.T_10, 
+			symbols.T_11,
 		}, 
 		Package0R0, 
 	},
 	Package0R1: {
 		symbols.NT_Package, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_9, 
-			symbols.T_10,
+			symbols.T_10, 
+			symbols.T_11,
 		}, 
 		Package0R1, 
 	},
 	Package0R2: {
 		symbols.NT_Package, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_9, 
-			symbols.T_10,
+			symbols.T_10, 
+			symbols.T_11,
 		}, 
 		Package0R2, 
 	},
@@ -453,14 +525,14 @@ var slots = map[Label]*Slot{
 	String0R0: {
 		symbols.NT_String, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_10,
+			symbols.T_11,
 		}, 
 		String0R0, 
 	},
 	String0R1: {
 		symbols.NT_String, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_10,
+			symbols.T_11,
 		}, 
 		String0R1, 
 	},
@@ -473,6 +545,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Data,1,1 }: Data1R1,
 	Index{ symbols.NT_Data,2,0 }: Data2R0,
 	Index{ symbols.NT_Data,2,1 }: Data2R1,
+	Index{ symbols.NT_Data,3,0 }: Data3R0,
+	Index{ symbols.NT_Data,3,1 }: Data3R1,
 	Index{ symbols.NT_DataList,0,0 }: DataList0R0,
 	Index{ symbols.NT_DataList,0,1 }: DataList0R1,
 	Index{ symbols.NT_DataList,1,0 }: DataList1R0,
@@ -491,6 +565,12 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Number,0,1 }: Number0R1,
 	Index{ symbols.NT_Number,1,0 }: Number1R0,
 	Index{ symbols.NT_Number,1,1 }: Number1R1,
+	Index{ symbols.NT_Operation,0,0 }: Operation0R0,
+	Index{ symbols.NT_Operation,0,1 }: Operation0R1,
+	Index{ symbols.NT_Operation,1,0 }: Operation1R0,
+	Index{ symbols.NT_Operation,1,1 }: Operation1R1,
+	Index{ symbols.NT_Operation,1,2 }: Operation1R2,
+	Index{ symbols.NT_Operation,1,3 }: Operation1R3,
 	Index{ symbols.NT_Orion,0,0 }: Orion0R0,
 	Index{ symbols.NT_Orion,0,1 }: Orion0R1,
 	Index{ symbols.NT_Orion,0,2 }: Orion0R2,
@@ -518,8 +598,9 @@ var alternates = map[symbols.NT][]Label{
 	symbols.NT_FuncCall:[]Label{ FuncCall0R0 },
 	symbols.NT_Import:[]Label{ Import0R0 },
 	symbols.NT_DataList:[]Label{ DataList0R0,DataList1R0 },
-	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0 },
+	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0,Data3R0 },
 	symbols.NT_String:[]Label{ String0R0 },
 	symbols.NT_Number:[]Label{ Number0R0,Number1R0 },
+	symbols.NT_Operation:[]Label{ Operation0R0,Operation1R0 },
 }
 

@@ -24,6 +24,7 @@ const(
 	NT_FuncCall 
 	NT_Import 
 	NT_Number 
+	NT_Operation 
 	NT_Orion 
 	NT_Package 
 	NT_Statement 
@@ -43,8 +44,9 @@ const(
 	T_6  // ident 
 	T_7  // integer 
 	T_8  // line_comment 
-	T_9  // package 
-	T_10  // string_lit 
+	T_9  // op 
+	T_10  // package 
+	T_11  // string_lit 
 )
 
 type Symbols []Symbol
@@ -117,6 +119,7 @@ var ntToString = []string {
 	"FuncCall", /* NT_FuncCall */
 	"Import", /* NT_Import */
 	"Number", /* NT_Number */
+	"Operation", /* NT_Operation */
 	"Orion", /* NT_Orion */
 	"Package", /* NT_Package */
 	"Statement", /* NT_Statement */
@@ -134,8 +137,9 @@ var tToString = []string {
 	"ident", /* T_6 */
 	"integer", /* T_7 */
 	"line_comment", /* T_8 */
-	"package", /* T_9 */
-	"string_lit", /* T_10 */ 
+	"op", /* T_9 */
+	"package", /* T_10 */
+	"string_lit", /* T_11 */ 
 }
 
 var stringNT = map[string]NT{ 
@@ -144,6 +148,7 @@ var stringNT = map[string]NT{
 	"FuncCall":NT_FuncCall,
 	"Import":NT_Import,
 	"Number":NT_Number,
+	"Operation":NT_Operation,
 	"Orion":NT_Orion,
 	"Package":NT_Package,
 	"Statement":NT_Statement,
