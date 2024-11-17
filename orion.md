@@ -46,6 +46,11 @@ integer : number {number} ;
 float : integer ['.' integer] ;
 ```
 
+### Operation Symbols:
+```
+op : ('+' | '-' | '*' | '/') ;
+```
+
 ## The Orion Rule
 
 It is the root rule for all statements in Orion.
@@ -130,9 +135,10 @@ DataList
 ## The Data Rule
 
 It represents all data types in Orion: string, numbers, etc.
+It also represents variables (_TODO_) and operations.
 
 ```
-Data : String | FuncCall | Number ;
+Data : String | FuncCall | Number | Operation ;
 ```
 
 ### The String Rule
@@ -149,4 +155,15 @@ It represents all integers and floating-point numbers in Orion.
 
 ```
 Number : integer | float ;
+```
+
+### The Operation Rule
+
+It represents all the operations in Orion.
+
+```
+Operation 
+        : Number
+        | Operation op Number
+        ;
 ```

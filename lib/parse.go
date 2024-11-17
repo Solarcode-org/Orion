@@ -115,35 +115,70 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 			Args: args,
 		}
 
-	case symbols.NT_Data:
-		child := b.GetNTChildI(0)
+	case symbols.NT_String:
+		quoted := b.GetTChildI(0).LiteralString()
+		str, err := strconv.Unquote(quoted)
+		CheckErr(err)
 
-		switch child.Label.Head() {
-		case symbols.NT_FuncCall:
-			return buildExpr(child, nil)
+		return &ast.Expr{
+			Type: ast.Expr_String,
+			Id:   str,
+		}
 
-		case symbols.NT_String:
-			quoted := child.GetTChildI(0).LiteralString()
-			str, err := strconv.Unquote(quoted)
-			CheckErr(err)
+	case symbols.NT_Number:
+		number := b.GetTChildI(0).LiteralString()
 
+		return &ast.Expr{
+			Type: ast.Expr_Number,
+			Id:   number,
+		}
+
+	case symbols.NT_Operation:
+		operation := b.GetNTChildI(0)
+		num1 := buildExpr(operation, nil)
+
+		if operation.Label.Head() == symbols.NT_Number {
+			return num1
+		}
+
+		op := b.GetTChildI(1)
+		num2 := buildExpr(b.GetNTChildI(2), nil)
+
+		switch op.LiteralString() {
+		case "+":
 			return &ast.Expr{
-				Type: ast.Expr_String,
-				Id:   str,
+				Type: ast.Expr_FuncCall,
+				Id:   "Sum",
+				Args: []*ast.Expr{num1, num2},
 			}
-
-		case symbols.NT_Number:
-			number := child.GetTChildI(0).LiteralString()
-
+		case "-":
 			return &ast.Expr{
-				Type: ast.Expr_Number,
-				Id:   number,
+				Type: ast.Expr_FuncCall,
+				Id:   "Difference",
+				Args: []*ast.Expr{num1, num2},
+			}
+		case "*":
+			return &ast.Expr{
+				Type: ast.Expr_FuncCall,
+				Id:   "Product",
+				Args: []*ast.Expr{num1, num2},
+			}
+		case "/":
+			return &ast.Expr{
+				Type: ast.Expr_FuncCall,
+				Id:   "Quotient",
+				Args: []*ast.Expr{num1, num2},
 			}
 
 		default:
-			log.Fatalf("reached invalid data type %s\n", child.Label.Head().String())
-			return nil
+			log.Fatalln("reached invalid operation", op.LiteralString())
+			return &ast.Expr{}
 		}
+
+	case symbols.NT_Data:
+		child := b.GetNTChildI(0)
+
+		return buildExpr(child, nil)
 
 	case symbols.NT_DataList:
 		children := b.GetAllNTChildren()
