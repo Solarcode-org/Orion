@@ -20,9 +20,9 @@ Println(1.1) ; say 1.1
 
 ;; Extreme decimal precision ( 0.1 + 0.2 is 0.3! )
 
-Println("0.1 + 0.2 =", 0.1 + 0.2)        ; say 0.1 + 0.2 ( 0.3 )
-Println("0.1 - 0.2 =", 0.1 - 0.2) ; say 0.1 - 0.2 ( -0.1 )
-Println("0.1 * 3.0 =", 0.1 * 3.0)    ; say 0.1 * 3.0 ( 0.3 )
+Println("0.1 + 0.2 =", 0.1 + 0.2)   ; say 0.1 + 0.2 ( 0.3 )
+Println("0.1 - 0.2 =", 0.1 - 0.2)   ; say 0.1 - 0.2 ( -0.1 )
+Println("0.1 * 3.0 =", 0.1 * 3.0)   ; say 0.1 * 3.0 ( 0.3 )
 Println("0.1 / 3.0 =", 0.1 / 3.0)   ; say 0.1 / 3.0 ( 0.0333333333333333...)
 Println("0.567854 rounded to nearest whole number =", Round(0.567854)) ; 1
 Println("2.05 rounded to upper whole number =", Ceil(2.05)) ; 3
