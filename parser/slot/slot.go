@@ -31,6 +31,10 @@ const(
 	FuncCall0R2
 	FuncCall0R3
 	FuncCall0R4
+	FuncCall1R0
+	FuncCall1R1
+	FuncCall1R2
+	FuncCall1R3
 	Import0R0
 	Import0R1
 	Import0R2
@@ -306,6 +310,42 @@ var slots = map[Label]*Slot{
 		}, 
 		FuncCall0R4, 
 	},
+	FuncCall1R0: {
+		symbols.NT_FuncCall, 1, 0, 
+		symbols.Symbols{  
+			symbols.T_6, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R0, 
+	},
+	FuncCall1R1: {
+		symbols.NT_FuncCall, 1, 1, 
+		symbols.Symbols{  
+			symbols.T_6, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R1, 
+	},
+	FuncCall1R2: {
+		symbols.NT_FuncCall, 1, 2, 
+		symbols.Symbols{  
+			symbols.T_6, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R2, 
+	},
+	FuncCall1R3: {
+		symbols.NT_FuncCall, 1, 3, 
+		symbols.Symbols{  
+			symbols.T_6, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R3, 
+	},
 	Import0R0: {
 		symbols.NT_Import, 0, 0, 
 		symbols.Symbols{  
@@ -558,6 +598,10 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_FuncCall,0,2 }: FuncCall0R2,
 	Index{ symbols.NT_FuncCall,0,3 }: FuncCall0R3,
 	Index{ symbols.NT_FuncCall,0,4 }: FuncCall0R4,
+	Index{ symbols.NT_FuncCall,1,0 }: FuncCall1R0,
+	Index{ symbols.NT_FuncCall,1,1 }: FuncCall1R1,
+	Index{ symbols.NT_FuncCall,1,2 }: FuncCall1R2,
+	Index{ symbols.NT_FuncCall,1,3 }: FuncCall1R3,
 	Index{ symbols.NT_Import,0,0 }: Import0R0,
 	Index{ symbols.NT_Import,0,1 }: Import0R1,
 	Index{ symbols.NT_Import,0,2 }: Import0R2,
@@ -595,7 +639,7 @@ var alternates = map[symbols.NT][]Label{
 	symbols.NT_Package:[]Label{ Package0R0 },
 	symbols.NT_Statements:[]Label{ Statements0R0,Statements1R0 },
 	symbols.NT_Statement:[]Label{ Statement0R0,Statement1R0 },
-	symbols.NT_FuncCall:[]Label{ FuncCall0R0 },
+	symbols.NT_FuncCall:[]Label{ FuncCall0R0,FuncCall1R0 },
 	symbols.NT_Import:[]Label{ Import0R0 },
 	symbols.NT_DataList:[]Label{ DataList0R0,DataList1R0 },
 	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0,Data3R0 },

@@ -17,39 +17,42 @@ limitations under the License.
 package lib
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/Solarcode-org/Orion/ast"
 
 	"github.com/Solarcode-org/Orion/parser/bsr"
 	"github.com/Solarcode-org/Orion/parser/symbols"
-	log "github.com/sirupsen/logrus"
 )
 
-// buildAST takes a non-terminal (`Orion`) as the `b` argument and builds it into
-// an Abstract Syntax tree.
-func buildAST(b bsr.BSR) []*ast.Expr {
+// AbstractSyntaxTree takes a non-terminal (`Orion`) as the `b` argument and builds it into
+// an AST.
+func AbstractSyntaxTree(b bsr.BSR) ([]*ast.Expr, error) {
 	nts := b.GetNTChildI(1).GetAllNTChildren()
 
 	exprs := make([]*ast.Expr, 0, len(nts))
 	for i := 0; i < len(nts); i++ {
 		nt := nts[i][0]
-		statements := getStatements(nt)
+		statements := Statements(nt)
 
 		for j := 0; j < len(statements); j++ {
 			bsr := statements[j].GetNTChildI(0)
 
-			expr := buildExpr(bsr, nil)
+			expr, err := Expr(bsr, nil)
+			if err != nil {
+				return nil, err
+			}
 
 			exprs = append(exprs, expr)
 		}
 	}
 
-	return exprs
+	return exprs, nil
 }
 
-// getStatements converts the `Statement` and `Statements` non-terminals into an array of statements
-func getStatements(stmt bsr.BSR) []bsr.BSR {
+// Statements converts the `Statement` and `Statements` non-terminals into an array of statements
+func Statements(stmt bsr.BSR) []bsr.BSR {
 	if stmt.Label.Head() == symbols.NT_Statement {
 		return []bsr.BSR{stmt}
 	} else {
@@ -59,30 +62,39 @@ func getStatements(stmt bsr.BSR) []bsr.BSR {
 		for i := 0; i < len(children); i++ {
 			child := children[i][0]
 
-			statements = append(statements, getStatements(child)...)
+			statements = append(statements, Statements(child)...)
 		}
 
 		return statements
 	}
 }
 
-// buildExpr takes any expression and builds it into an AST Node ([*ast.Expr])
-func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
+// Expr takes any expression and builds it into an AST Node ([*ast.Expr])
+func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 	switch b.Label.Head() {
 	case symbols.NT_FuncCall:
-		rawArgs := b.GetNTChildrenI(2)[0].GetAllNTChildren()
+		funcParts := b.GetAllNTChildren()
+
+		var rawArgs [][]bsr.BSR
+
+		if len(funcParts) > 0 {
+			rawArgs = funcParts[0][0].GetAllNTChildren()
+		}
 
 		args := make([]*ast.Expr, 0, len(rawArgs))
 
 		for i := 0; i < len(rawArgs); i++ {
 			bsr := rawArgs[i][0]
 
-			built := buildExpr(bsr, args)
+			expr, err := Expr(bsr, args)
+			if err != nil {
+				return nil, err
+			}
 
 			if bsr.Label.Head() == symbols.NT_DataList {
-				args = built.Args
+				args = expr.Args
 			} else {
-				args = append(args, built)
+				args = append(args, expr)
 			}
 		}
 
@@ -90,22 +102,25 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 			Type: ast.Expr_FuncCall,
 			Id:   b.GetTChildI(0).LiteralString(),
 			Args: args,
-		}
+		}, nil
 
 	case symbols.NT_Import:
-		rawArgs := b.GetNTChildrenI(1)[0].GetAllNTChildren()
+		rawArgs := b.GetNTChildI(1).GetAllNTChildren()
 
 		args := make([]*ast.Expr, 0, len(rawArgs))
 
 		for i := 0; i < len(rawArgs); i++ {
 			bsr := rawArgs[i][0]
 
-			built := buildExpr(bsr, args)
+			expr, err := Expr(bsr, args)
+			if err != nil {
+				return nil, err
+			}
 
 			if bsr.Label.Head() == symbols.NT_DataList {
-				args = built.Args
+				args = expr.Args
 			} else {
-				args = append(args, built)
+				args = append(args, expr)
 			}
 		}
 
@@ -113,7 +128,7 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 			Type: ast.Expr_FuncCall,
 			Id:   "get",
 			Args: args,
-		}
+		}, nil
 
 	case symbols.NT_String:
 		quoted := b.GetTChildI(0).LiteralString()
@@ -123,7 +138,7 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 		return &ast.Expr{
 			Type: ast.Expr_String,
 			Id:   str,
-		}
+		}, nil
 
 	case symbols.NT_Number:
 		number := b.GetTChildI(0).LiteralString()
@@ -131,18 +146,26 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 		return &ast.Expr{
 			Type: ast.Expr_Number,
 			Id:   number,
-		}
+		}, nil
 
 	case symbols.NT_Operation:
 		operation := b.GetNTChildI(0)
-		num1 := buildExpr(operation, nil)
+
+		num1, err := Expr(operation, nil)
+		if err != nil {
+			return nil, err
+		}
 
 		if operation.Label.Head() == symbols.NT_Number {
-			return num1
+			return num1, nil
 		}
 
 		op := b.GetTChildI(1)
-		num2 := buildExpr(b.GetNTChildI(2), nil)
+
+		num2, err := Expr(b.GetNTChildI(2), nil)
+		if err != nil {
+			return nil, err
+		}
 
 		switch op.LiteralString() {
 		case "+":
@@ -150,35 +173,34 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 				Type: ast.Expr_FuncCall,
 				Id:   "Sum",
 				Args: []*ast.Expr{num1, num2},
-			}
+			}, nil
 		case "-":
 			return &ast.Expr{
 				Type: ast.Expr_FuncCall,
 				Id:   "Difference",
 				Args: []*ast.Expr{num1, num2},
-			}
+			}, nil
 		case "*":
 			return &ast.Expr{
 				Type: ast.Expr_FuncCall,
 				Id:   "Product",
 				Args: []*ast.Expr{num1, num2},
-			}
+			}, nil
 		case "/":
 			return &ast.Expr{
 				Type: ast.Expr_FuncCall,
 				Id:   "Quotient",
 				Args: []*ast.Expr{num1, num2},
-			}
+			}, nil
 
 		default:
-			log.Fatalln("reached invalid operation", op.LiteralString())
-			return &ast.Expr{}
+			return nil, fmt.Errorf("reached invalid operation: %s", op.LiteralString())
 		}
 
 	case symbols.NT_Data:
 		child := b.GetNTChildI(0)
 
-		return buildExpr(child, nil)
+		return Expr(child, nil)
 
 	case symbols.NT_DataList:
 		children := b.GetAllNTChildren()
@@ -192,7 +214,10 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 			for i := 0; i < len(datalist); i++ {
 				datum := datalist[i][0]
 
-				arg := buildExpr(datum, args)
+				arg, err := Expr(datum, args)
+				if err != nil {
+					return nil, err
+				}
 
 				if datum.Label.Head() == symbols.NT_DataList {
 					args = append(args, arg.Args...)
@@ -201,19 +226,27 @@ func buildExpr(b bsr.BSR, passed_args []*ast.Expr) *ast.Expr {
 				}
 			}
 
-			args = append(args, buildExpr(
-				data, args))
+			arg, err := Expr(data, args)
+			if err != nil {
+				return nil, err
+			}
+
+			args = append(args, arg)
 
 		} else {
-			args = append(args, buildExpr(children[0][0], args))
+			arg, err := Expr(children[0][0], args)
+			if err != nil {
+				return nil, err
+			}
+
+			args = append(args, arg)
 		}
 
 		return &ast.Expr{
 			Args: args,
-		}
+		}, nil
 
 	default:
-		log.Fatalln("reached invalid parse", b.Label.Head())
-		return nil
+		return nil, fmt.Errorf("reached invalid parse: %s", b.Label.Head().String())
 	}
 }

@@ -23,14 +23,14 @@ import (
 	"github.com/Solarcode-org/Orion/ast"
 )
 
-// add_modgetter adds import functionality to Orion.
-func add_modgetter(functions FunctionsType) {
+// addModGetter adds import functionality to Orion.
+func addModGetter(functions FunctionsType) {
 	functions["get"] = func(data []*ast.Expr) (ast.Expr, error) {
 		for i := 0; i < len(data); i++ {
 			module := data[i]
 
 			if module.Type != ast.Expr_String /* && module.Type != ast.Ident */ {
-				return ast.Expr{}, fmt.Errorf("get: expected string or identifier as module arguments")
+				return ast.Expr{}, fmt.Errorf("expected string or identifier as module arguments")
 			}
 
 			keys := make([]string, 0, len(functions))

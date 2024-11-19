@@ -7,8 +7,7 @@ In this program we will:
 
 package "_examples/main"
 
-get "fmt" ; gets the formatting module
-get "math" ; gets the math module
+get "fmt", "math" ; gets the formatting and math modules
 
 Println("Hi", "user!"); greet the user
 

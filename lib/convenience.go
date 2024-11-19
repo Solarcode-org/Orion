@@ -18,7 +18,6 @@ package lib
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/Solarcode-org/Orion/ast"
 	"github.com/Solarcode-org/Orion/lexer"
@@ -28,21 +27,25 @@ import (
 	"golang.org/x/text/language"
 )
 
-// GetAbstractSyntaxTree returns the AST formed by the input source.
-func GetAbstractSyntaxTree(src []byte) ([]*ast.Expr, []*parser.Error) {
+// ParsedFrom uses the lexer to tokenize the input source and
+// returns the AST formed by parsing the tokenized content.
+func ParsedFrom(src []byte) ([]*ast.Expr, []*parser.Error, error) {
 	log.Tracef("started function `lib.GetAbstractSyntaxTree` with argument `src`=`%s`\n", src)
 
 	lex := lexer.New([]rune(string(src)))
 	bsrSet, errs := parser.Parse(lex)
 
 	if len(errs) > 0 {
-		return nil, errs
+		return nil, errs, nil
 	}
 
-	ast := buildAST(bsrSet.GetRoot())
+	ast, err := AbstractSyntaxTree(bsrSet.GetRoot())
+	if err != nil {
+		return nil, nil, err
+	}
 
 	log.Traceln("successfully ended function `lib.GetAbstractSyntaxTree`")
-	return ast, nil
+	return ast, nil, nil
 }
 
 // CheckErr checks if an error value is not nil and runs [log.Fatalln] for the error.
@@ -52,49 +55,54 @@ func CheckErr(err error) {
 	}
 }
 
-// NoArgs checks if the list of args is empty. If not, [log.Fatalf] is called.
-func NoArgs(funcname string, data []*ast.Expr) {
+// CheckIfNoArgs checks if the list of args is empty. If not, it returns an error.
+func CheckIfNoArgs(data []*ast.Expr) error {
 	if len(data) > 0 {
-		log.Fatalf("%s: expected no arguments, got %d\n", funcname, len(data))
+		return fmt.Errorf("expected no arguments, got %d", len(data))
 	}
+
+	return nil
 }
 
-// ExactArgs checks if the number of args matches `amount`. If not, [log.Fatalf] is called.
-func ExactArgs(funcname string, data []*ast.Expr, amount int) {
+// CheckIfExactArgs checks if the number of args matches `amount`. If not, it returns an error
+func CheckIfExactArgs(data []*ast.Expr, amount int) error {
 	if len(data) != amount {
-		log.Fatalf("%s: expected exactly %d arguments, got %d\n", funcname, amount, len(data))
+		return fmt.Errorf("expected exactly %d arguments, got %d", amount, len(data))
 	}
+
+	return nil
 }
 
 // RunFunc contains the functionality for running an Orion function.
-func RunFunc(funcCall ast.Expr, functions map[string]func([]*ast.Expr) (ast.Expr, error)) ast.Expr {
+func RunFunc(funcCall ast.Expr, functions map[string]func([]*ast.Expr) (ast.Expr, error)) (ast.Expr, error) {
 	if function, ok := functions[funcCall.Id]; ok {
 		value, err := function(funcCall.Args)
 		if err != nil {
-			log.Fatalf("%s: %s\n", funcCall.Id, err)
+			return ast.Expr{}, fmt.Errorf("%s: %w", funcCall.Id, err)
 		}
 
-		return value
+		return value, nil
 	}
 
 	caser := cases.Title(language.AmericanEnglish)
 
 	if _, ok := functions[caser.String(funcCall.Id)]; ok {
-		log.Fatalf("Could not find function: %s\nDid you mean: %s?\n", funcCall.Id, caser.String(funcCall.Id))
+		return ast.Expr{}, fmt.Errorf("could not find function: %s, did you mean: %s", funcCall.Id, caser.String(funcCall.Id))
 	}
 
-	log.Fatalf("Could not find function: %s\nMaybe you forgot to add a module prefix?\n", funcCall.Id)
-	return ast.Expr{}
+	return ast.Expr{}, fmt.Errorf("could not find function: %s, you may have forgotten to add a module prefix", funcCall.Id)
 }
 
 // FailParse prints all the errors with the same line number as `errs[0]` and exits with code 1.
 func FailParse(errs []*parser.Error) {
-	fmt.Println("Parse Errors:")
+	errors := "parse errors:\n"
+
 	ln := errs[0].Line
 	for _, err := range errs {
 		if err.Line == ln {
-			fmt.Println("  ", err)
+			errors += fmt.Sprintln("  ", err)
 		}
 	}
-	os.Exit(1)
+
+	log.Fatal(errors)
 }

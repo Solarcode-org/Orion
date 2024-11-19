@@ -104,7 +104,10 @@ It represent a function call.
 The arguments are in the form of a [DataList](#the-datalist-rule).
 
 ```
-FuncCall : ident "(" DataList ")" ;
+FuncCall
+        : ident "(" DataList ")"
+        | ident "(" ")"
+        ;
 ```
 
 ## The Import Rule

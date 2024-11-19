@@ -21,16 +21,20 @@ import (
 	"github.com/Solarcode-org/Orion/lib"
 )
 
-// EvalArgs converts all the arguments of a function into usable values.
-// For example: evaluating function values befor use.
-func EvalArgs(data []*ast.Expr) []*ast.Expr {
+// ParsedArgs converts all the arguments of a function into usable values.
+// For example: evaluating function values before use.
+func ParsedArgs(data []*ast.Expr) ([]*ast.Expr, error) {
 	args := make([]*ast.Expr, 0, len(data))
 
 	for i := 0; i < len(data); i++ {
 		datum := data[i]
 
 		if datum.Type == ast.Expr_FuncCall {
-			value := lib.RunFunc(*datum, Functions)
+			value, err := lib.RunFunc(*datum, Functions)
+			if err != nil {
+				return nil, err
+			}
+
 			args = append(args, &value)
 
 			continue
@@ -39,5 +43,5 @@ func EvalArgs(data []*ast.Expr) []*ast.Expr {
 		args = append(args, datum)
 	}
 
-	return args
+	return args, nil
 }

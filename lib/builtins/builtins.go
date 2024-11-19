@@ -34,7 +34,7 @@ var Functions FunctionsType
 func MakeFunctions() {
 	Functions = make(FunctionsType)
 
-	add_fmt_mod(Functions)
-	add_modgetter(Functions)
-	add_arithmetic_mod(Functions)
+	addFmt(Functions)
+	addModGetter(Functions)
+	addArithmetic(Functions)
 }

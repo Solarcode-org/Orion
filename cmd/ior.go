@@ -64,11 +64,11 @@ var iorCmd = &cobra.Command{
 
 		contents = append(contents, "\n"...)
 
-		astree, errs := lib.GetAbstractSyntaxTree(contents)
-
-		if len(errs) > 0 {
-			lib.FailParse(errs)
+		astree, parseErrs, err := lib.ParsedFrom(contents)
+		if len(parseErrs) > 0 {
+			lib.FailParse(parseErrs)
 		}
+		lib.CheckErr(err)
 
 		log.Tracef("Parsed into Abstract Syntax Tree: %v\n", astree)
 
@@ -79,7 +79,9 @@ var iorCmd = &cobra.Command{
 
 			switch stmt.Type {
 			case ast.Expr_FuncCall:
-				lib.RunFunc(*stmt, builtins.Functions)
+				_, err := lib.RunFunc(*stmt, builtins.Functions)
+
+				lib.CheckErr(err)
 			}
 		}
 

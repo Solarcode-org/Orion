@@ -171,6 +171,29 @@ func (p *parser) parse() (*bsr.Set, []*Error) {
 			} else {
 				p.parseError(slot.FuncCall0R0, p.cI, followSets[symbols.NT_FuncCall])
 			}
+		case slot.FuncCall1R0: // FuncCall : ∙ident ( )
+
+			p.bsrSet.Add(slot.FuncCall1R1, cU, p.cI, p.cI+1)
+			p.cI++
+			if !p.testSelect(slot.FuncCall1R1) {
+				p.parseError(slot.FuncCall1R1, p.cI, first[slot.FuncCall1R1])
+				break
+			}
+
+			p.bsrSet.Add(slot.FuncCall1R2, cU, p.cI, p.cI+1)
+			p.cI++
+			if !p.testSelect(slot.FuncCall1R2) {
+				p.parseError(slot.FuncCall1R2, p.cI, first[slot.FuncCall1R2])
+				break
+			}
+
+			p.bsrSet.Add(slot.FuncCall1R3, cU, p.cI, p.cI+1)
+			p.cI++
+			if p.follow(symbols.NT_FuncCall) {
+				p.rtn(symbols.NT_FuncCall, cU, p.cI)
+			} else {
+				p.parseError(slot.FuncCall1R0, p.cI, followSets[symbols.NT_FuncCall])
+			}
 		case slot.Import0R0: // Import : ∙get DataList
 
 			p.bsrSet.Add(slot.Import0R1, cU, p.cI, p.cI+1)
@@ -689,6 +712,26 @@ var first = []map[token.Type]string{
 		token.T_1: ")",
 	},
 	// FuncCall : ident ( DataList ) ∙
+	{
+		token.EOF: "$",
+		token.T_1: ")",
+		token.T_2: ",",
+		token.T_5: "get",
+		token.T_6: "ident",
+	},
+	// FuncCall : ∙ident ( )
+	{
+		token.T_6: "ident",
+	},
+	// FuncCall : ident ∙( )
+	{
+		token.T_0: "(",
+	},
+	// FuncCall : ident ( ∙)
+	{
+		token.T_1: ")",
+	},
+	// FuncCall : ident ( ) ∙
 	{
 		token.EOF: "$",
 		token.T_1: ")",
