@@ -1,8 +1,8 @@
-# GOCC Logs
-LR1_*.txt
-first.txt
-lexer_sets.txt
-terminals.txt
+# GoGLL logs
+first_follow.txt
+grammar_slots.txt
+lexfsa.txt
+symbols.txt
 
 # GoReleaser Directory
 dist/

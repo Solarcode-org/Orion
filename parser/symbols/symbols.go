@@ -30,6 +30,8 @@ const(
 	NT_Statement 
 	NT_Statements 
 	NT_String 
+	NT_Variable 
+	NT_VariableDef 
 )
 
 // T is the type of terminals symbols
@@ -38,15 +40,16 @@ const(
 	T_0 T = iota // ( 
 	T_1  // ) 
 	T_2  // , 
-	T_3  // block_comment 
-	T_4  // float 
-	T_5  // get 
-	T_6  // ident 
-	T_7  // integer 
-	T_8  // line_comment 
-	T_9  // op 
-	T_10  // package 
-	T_11  // string_lit 
+	T_3  // := 
+	T_4  // block_comment 
+	T_5  // float 
+	T_6  // get 
+	T_7  // ident 
+	T_8  // integer 
+	T_9  // line_comment 
+	T_10  // op 
+	T_11  // package 
+	T_12  // string_lit 
 )
 
 type Symbols []Symbol
@@ -124,22 +127,25 @@ var ntToString = []string {
 	"Package", /* NT_Package */
 	"Statement", /* NT_Statement */
 	"Statements", /* NT_Statements */
-	"String", /* NT_String */ 
+	"String", /* NT_String */
+	"Variable", /* NT_Variable */
+	"VariableDef", /* NT_VariableDef */ 
 }
 
 var tToString = []string { 
 	"(", /* T_0 */
 	")", /* T_1 */
 	",", /* T_2 */
-	"block_comment", /* T_3 */
-	"float", /* T_4 */
-	"get", /* T_5 */
-	"ident", /* T_6 */
-	"integer", /* T_7 */
-	"line_comment", /* T_8 */
-	"op", /* T_9 */
-	"package", /* T_10 */
-	"string_lit", /* T_11 */ 
+	":=", /* T_3 */
+	"block_comment", /* T_4 */
+	"float", /* T_5 */
+	"get", /* T_6 */
+	"ident", /* T_7 */
+	"integer", /* T_8 */
+	"line_comment", /* T_9 */
+	"op", /* T_10 */
+	"package", /* T_11 */
+	"string_lit", /* T_12 */ 
 }
 
 var stringNT = map[string]NT{ 
@@ -154,4 +160,6 @@ var stringNT = map[string]NT{
 	"Statement":NT_Statement,
 	"Statements":NT_Statements,
 	"String":NT_String,
+	"Variable":NT_Variable,
+	"VariableDef":NT_VariableDef,
 }

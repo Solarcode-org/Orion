@@ -14,63 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package lib
+package utils
 
 import (
 	"fmt"
 
 	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lexer"
 	"github.com/Solarcode-org/Orion/parser"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
 
-// ParsedFrom uses the lexer to tokenize the input source and
-// returns the AST formed by parsing the tokenized content.
-func ParsedFrom(src []byte) ([]*ast.Expr, []*parser.Error, error) {
-	log.Tracef("started function `lib.GetAbstractSyntaxTree` with argument `src`=`%s`\n", src)
-
-	lex := lexer.New([]rune(string(src)))
-	bsrSet, errs := parser.Parse(lex)
-
-	if len(errs) > 0 {
-		return nil, errs, nil
-	}
-
-	ast, err := AbstractSyntaxTree(bsrSet.GetRoot())
-	if err != nil {
-		return nil, nil, err
-	}
-
-	log.Traceln("successfully ended function `lib.GetAbstractSyntaxTree`")
-	return ast, nil, nil
-}
-
 // CheckErr checks if an error value is not nil and runs [log.Fatalln] for the error.
 func CheckErr(err error) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
-
-// CheckIfNoArgs checks if the list of args is empty. If not, it returns an error.
-func CheckIfNoArgs(data []*ast.Expr) error {
-	if len(data) > 0 {
-		return fmt.Errorf("expected no arguments, got %d", len(data))
-	}
-
-	return nil
-}
-
-// CheckIfExactArgs checks if the number of args matches `amount`. If not, it returns an error
-func CheckIfExactArgs(data []*ast.Expr, amount int) error {
-	if len(data) != amount {
-		return fmt.Errorf("expected exactly %d arguments, got %d", amount, len(data))
-	}
-
-	return nil
 }
 
 // RunFunc contains the functionality for running an Orion function.

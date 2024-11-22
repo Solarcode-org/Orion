@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lib"
 )
 
 // addFmt adds the standard input/output module ("fmt"), along with the
@@ -78,7 +77,7 @@ func fmt_input(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 1); err != nil {
+	if err = checkIfExactArgs(args, 1); err != nil {
 		return ast.Expr{}, err
 	}
 

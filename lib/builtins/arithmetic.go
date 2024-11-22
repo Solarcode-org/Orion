@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lib"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -72,7 +72,7 @@ func math_difference(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 2); err != nil {
+	if err = checkIfExactArgs(args, 2); err != nil {
 		return ast.Expr{}, err
 	}
 
@@ -140,7 +140,7 @@ func math_quotient(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 2); err != nil {
+	if err = checkIfExactArgs(args, 2); err != nil {
 		return ast.Expr{}, err
 	}
 
@@ -173,7 +173,7 @@ func math_round(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 1); err != nil {
+	if err = checkIfExactArgs(args, 1); err != nil {
 		return ast.Expr{}, err
 	}
 
@@ -198,7 +198,7 @@ func math_ceil(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 1); err != nil {
+	if err = checkIfExactArgs(args, 1); err != nil {
 		return ast.Expr{}, err
 	}
 
@@ -223,7 +223,7 @@ func math_floor(data []*ast.Expr) (ast.Expr, error) {
 	if err != nil {
 		return ast.Expr{}, err
 	}
-	if err = lib.CheckIfExactArgs(args, 1); err != nil {
+	if err = checkIfExactArgs(args, 1); err != nil {
 		return ast.Expr{}, err
 	}
 

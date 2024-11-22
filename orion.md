@@ -26,7 +26,7 @@ package "github.com/Solarcode-org/Orion"
 
 ### Identifier:
 ```
-ident : letter {letter|number|'_'|'?'|'/'} ;
+ident : [letter|'@'] {letter|number|'_'|'?'|'.'} ;
 ```
 
 ### Comments:
@@ -87,11 +87,11 @@ Statements
 It represents four types of statements:
   1. [Function definitions](#todo-the-function-definition-rule) (_TODO_)
   2. [Function calls](#the-function-call-rule)
-  3. [Variable definitions](#todo-the-variable-definition-rule) (_TODO_)
+  3. [Variable definitions](#the-variable-definition-rule)
   4. [Imports](#the-import-rule)
 
 ```
-Statement : FuncCall | Import ; 
+Statement : FuncCall | Import | VariableDef ; 
 ```
 
 ## (_TODO_): The Function Definition Rule
@@ -119,10 +119,17 @@ The arguments are in the form of a [DataList](#the-datalist-rule).
 Import : "get" DataList ;
 ```
 
+## The Variable Definition Rule
 
-## (_TODO_): The Variable Definition Rule
+It represents a variable definition.
+A variable declaration statement is in the form:
+<blockquote>variableName = value</blockquote>
+<!-- or
+<blockquote>variableName type = value</blockquote> -->
 
-It represents a variable definition
+```
+VariableDef : ident ":=" Data ;
+```
 
 ## The DataList Rule
 
@@ -138,10 +145,10 @@ DataList
 ## The Data Rule
 
 It represents all data types in Orion: string, numbers, etc.
-It also represents variables (_TODO_) and operations.
+It also represents variables and operations.
 
 ```
-Data : String | FuncCall | Number | Operation ;
+Data : String | FuncCall | Number | Operation | Variable ;
 ```
 
 ### The String Rule
@@ -158,6 +165,14 @@ It represents all integers and floating-point numbers in Orion.
 
 ```
 Number : integer | float ;
+```
+
+### The Variable Rule
+
+It represents all variables in Orion.
+
+```
+Variable : ident ;
 ```
 
 ### The Operation Rule

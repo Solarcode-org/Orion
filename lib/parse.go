@@ -21,10 +21,37 @@ import (
 	"strconv"
 
 	"github.com/Solarcode-org/Orion/ast"
+	"github.com/Solarcode-org/Orion/lexer"
+	"github.com/Solarcode-org/Orion/lib/builtins"
+	"github.com/Solarcode-org/Orion/parser"
+	"github.com/Solarcode-org/Orion/utils"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/Solarcode-org/Orion/parser/bsr"
 	"github.com/Solarcode-org/Orion/parser/symbols"
 )
+
+// ParsedFrom uses the lexer to tokenize the input source and
+// returns the AST formed by parsing the tokenized content.
+func ParsedFrom(src []byte) ([]*ast.Expr, []*parser.Error, error) {
+	log.Tracef("started function `lib.GetAbstractSyntaxTree` with argument `src`=`%s`\n", src)
+
+	lex := lexer.New([]rune(string(src)))
+	bsrSet, errs := parser.Parse(lex)
+
+	if len(errs) > 0 {
+		return nil, errs, nil
+	}
+
+	ast, err := AbstractSyntaxTree(bsrSet.GetRoot())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	log.Traceln("successfully ended function `lib.GetAbstractSyntaxTree`")
+	return ast, nil, nil
+}
 
 // AbstractSyntaxTree takes a non-terminal (`Orion`) as the `b` argument and builds it into
 // an AST.
@@ -133,7 +160,7 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 	case symbols.NT_String:
 		quoted := b.GetTChildI(0).LiteralString()
 		str, err := strconv.Unquote(quoted)
-		CheckErr(err)
+		utils.CheckErr(err)
 
 		return &ast.Expr{
 			Type: ast.Expr_String,
@@ -245,6 +272,29 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 		return &ast.Expr{
 			Args: args,
 		}, nil
+
+	case symbols.NT_VariableDef:
+		varName := b.GetTChildI(0).LiteralString()
+		value := b.GetNTChildI(2)
+
+		valueParsed, err := Expr(value, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		builtins.Variables[varName] = *valueParsed
+
+		return &ast.Expr{}, nil
+
+	case symbols.NT_Variable:
+		varName := b.GetTChildI(0).LiteralString()
+
+		if value, ok := builtins.Variables[varName]; ok {
+			log.Debugf("%+#v\n", value)
+			return &value, nil
+		} else {
+			return nil, fmt.Errorf("could not find name: %s", varName)
+		}
 
 	default:
 		return nil, fmt.Errorf("reached invalid parse: %s", b.Label.Head().String())
