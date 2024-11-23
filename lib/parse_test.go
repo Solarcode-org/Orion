@@ -27,7 +27,7 @@ import (
 func TestParseEmpty(t *testing.T) {
 	contents := []byte{}
 
-	_, errs := lib.GetAbstractSyntaxTree(contents)
+	_, errs, _ := lib.ParsedFrom(contents)
 	if len(errs) == 0 {
 		t.Fatal("expected failure on empty file")
 	}
@@ -37,8 +37,8 @@ func TestParseEmpty(t *testing.T) {
 func TestParsePackageOnly(t *testing.T) {
 	contents := []byte("package \"__testing/untitled\"")
 
-	_, errs := lib.GetAbstractSyntaxTree(contents)
-	if len(errs) == 0 {
+	_, parseErrs, _ := lib.ParsedFrom(contents)
+	if len(parseErrs) == 0 {
 		t.Fatal("expected failure on file with only package name.")
 	}
 }
@@ -51,17 +51,20 @@ Println("Hello,", "world")
 
 // TestParseValid tries to parse [validFile].
 func TestParseValid(t *testing.T) {
-	_, errs := lib.GetAbstractSyntaxTree(validFile)
-	if len(errs) > 0 {
+	_, parseErrs, err := lib.ParsedFrom(validFile)
+	if len(parseErrs) > 0 {
 		t.Log("Parse errors:")
 
-		ln := errs[0].Line
-		for _, err := range errs {
+		ln := parseErrs[0].Line
+		for _, err := range parseErrs {
 			if err.Line == ln {
 				t.Log("  ", err)
 			}
 		}
 		t.FailNow()
+	}
+	if err != nil {
+		t.Error(err)
 	}
 }
 
@@ -69,6 +72,6 @@ func TestParseValid(t *testing.T) {
 // by trying to parse [validFile].
 func BenchmarkParseValid(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		lib.GetAbstractSyntaxTree(validFile)
+		lib.ParsedFrom(validFile)
 	}
 }

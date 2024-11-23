@@ -20,6 +20,8 @@ const(
 	Data2R1
 	Data3R0
 	Data3R1
+	Data4R0
+	Data4R1
 	DataList0R0
 	DataList0R1
 	DataList1R0
@@ -31,6 +33,10 @@ const(
 	FuncCall0R2
 	FuncCall0R3
 	FuncCall0R4
+	FuncCall1R0
+	FuncCall1R1
+	FuncCall1R2
+	FuncCall1R3
 	Import0R0
 	Import0R1
 	Import0R2
@@ -40,10 +46,8 @@ const(
 	Number1R1
 	Operation0R0
 	Operation0R1
-	Operation1R0
-	Operation1R1
-	Operation1R2
-	Operation1R3
+	Operation0R2
+	Operation0R3
 	Orion0R0
 	Orion0R1
 	Orion0R2
@@ -54,6 +58,8 @@ const(
 	Statement0R1
 	Statement1R0
 	Statement1R1
+	Statement2R0
+	Statement2R1
 	Statements0R0
 	Statements0R1
 	Statements1R0
@@ -61,6 +67,18 @@ const(
 	Statements1R2
 	String0R0
 	String0R1
+	Variable0R0
+	Variable0R1
+	VariableDef0R0
+	VariableDef0R1
+	VariableDef0R2
+	VariableDef0R3
+	VariableDef1R0
+	VariableDef1R1
+	VariableDef1R2
+	VariableDef1R3
+	VariableDef1R4
+	VariableDef1R5
 )
 
 type Slot struct {
@@ -206,6 +224,20 @@ var slots = map[Label]*Slot{
 		}, 
 		Data3R1, 
 	},
+	Data4R0: {
+		symbols.NT_Data, 4, 0, 
+		symbols.Symbols{  
+			symbols.NT_Variable,
+		}, 
+		Data4R0, 
+	},
+	Data4R1: {
+		symbols.NT_Data, 4, 1, 
+		symbols.Symbols{  
+			symbols.NT_Variable,
+		}, 
+		Data4R1, 
+	},
 	DataList0R0: {
 		symbols.NT_DataList, 0, 0, 
 		symbols.Symbols{  
@@ -259,7 +291,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R0: {
 		symbols.NT_FuncCall, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_6, 
+			symbols.T_9, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -269,7 +301,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R1: {
 		symbols.NT_FuncCall, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_6, 
+			symbols.T_9, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -279,7 +311,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R2: {
 		symbols.NT_FuncCall, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_6, 
+			symbols.T_9, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -289,7 +321,7 @@ var slots = map[Label]*Slot{
 	FuncCall0R3: {
 		symbols.NT_FuncCall, 0, 3, 
 		symbols.Symbols{  
-			symbols.T_6, 
+			symbols.T_9, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
@@ -299,17 +331,53 @@ var slots = map[Label]*Slot{
 	FuncCall0R4: {
 		symbols.NT_FuncCall, 0, 4, 
 		symbols.Symbols{  
-			symbols.T_6, 
+			symbols.T_9, 
 			symbols.T_0, 
 			symbols.NT_DataList, 
 			symbols.T_1,
 		}, 
 		FuncCall0R4, 
 	},
+	FuncCall1R0: {
+		symbols.NT_FuncCall, 1, 0, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R0, 
+	},
+	FuncCall1R1: {
+		symbols.NT_FuncCall, 1, 1, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R1, 
+	},
+	FuncCall1R2: {
+		symbols.NT_FuncCall, 1, 2, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R2, 
+	},
+	FuncCall1R3: {
+		symbols.NT_FuncCall, 1, 3, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_0, 
+			symbols.T_1,
+		}, 
+		FuncCall1R3, 
+	},
 	Import0R0: {
 		symbols.NT_Import, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_8, 
 			symbols.NT_DataList,
 		}, 
 		Import0R0, 
@@ -317,7 +385,7 @@ var slots = map[Label]*Slot{
 	Import0R1: {
 		symbols.NT_Import, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_8, 
 			symbols.NT_DataList,
 		}, 
 		Import0R1, 
@@ -325,7 +393,7 @@ var slots = map[Label]*Slot{
 	Import0R2: {
 		symbols.NT_Import, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_5, 
+			symbols.T_8, 
 			symbols.NT_DataList,
 		}, 
 		Import0R2, 
@@ -333,80 +401,66 @@ var slots = map[Label]*Slot{
 	Number0R0: {
 		symbols.NT_Number, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_7,
+			symbols.T_10,
 		}, 
 		Number0R0, 
 	},
 	Number0R1: {
 		symbols.NT_Number, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_7,
+			symbols.T_10,
 		}, 
 		Number0R1, 
 	},
 	Number1R0: {
 		symbols.NT_Number, 1, 0, 
 		symbols.Symbols{  
-			symbols.T_4,
+			symbols.T_7,
 		}, 
 		Number1R0, 
 	},
 	Number1R1: {
 		symbols.NT_Number, 1, 1, 
 		symbols.Symbols{  
-			symbols.T_4,
+			symbols.T_7,
 		}, 
 		Number1R1, 
 	},
 	Operation0R0: {
 		symbols.NT_Operation, 0, 0, 
 		symbols.Symbols{  
-			symbols.NT_Number,
+			symbols.NT_Data, 
+			symbols.T_12, 
+			symbols.NT_Data,
 		}, 
 		Operation0R0, 
 	},
 	Operation0R1: {
 		symbols.NT_Operation, 0, 1, 
 		symbols.Symbols{  
-			symbols.NT_Number,
+			symbols.NT_Data, 
+			symbols.T_12, 
+			symbols.NT_Data,
 		}, 
 		Operation0R1, 
 	},
-	Operation1R0: {
-		symbols.NT_Operation, 1, 0, 
+	Operation0R2: {
+		symbols.NT_Operation, 0, 2, 
 		symbols.Symbols{  
-			symbols.NT_Operation, 
-			symbols.T_9, 
-			symbols.NT_Number,
+			symbols.NT_Data, 
+			symbols.T_12, 
+			symbols.NT_Data,
 		}, 
-		Operation1R0, 
+		Operation0R2, 
 	},
-	Operation1R1: {
-		symbols.NT_Operation, 1, 1, 
+	Operation0R3: {
+		symbols.NT_Operation, 0, 3, 
 		symbols.Symbols{  
-			symbols.NT_Operation, 
-			symbols.T_9, 
-			symbols.NT_Number,
+			symbols.NT_Data, 
+			symbols.T_12, 
+			symbols.NT_Data,
 		}, 
-		Operation1R1, 
-	},
-	Operation1R2: {
-		symbols.NT_Operation, 1, 2, 
-		symbols.Symbols{  
-			symbols.NT_Operation, 
-			symbols.T_9, 
-			symbols.NT_Number,
-		}, 
-		Operation1R2, 
-	},
-	Operation1R3: {
-		symbols.NT_Operation, 1, 3, 
-		symbols.Symbols{  
-			symbols.NT_Operation, 
-			symbols.T_9, 
-			symbols.NT_Number,
-		}, 
-		Operation1R3, 
+		Operation0R3, 
 	},
 	Orion0R0: {
 		symbols.NT_Orion, 0, 0, 
@@ -435,24 +489,24 @@ var slots = map[Label]*Slot{
 	Package0R0: {
 		symbols.NT_Package, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_10, 
-			symbols.T_11,
+			symbols.T_13, 
+			symbols.T_14,
 		}, 
 		Package0R0, 
 	},
 	Package0R1: {
 		symbols.NT_Package, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_10, 
-			symbols.T_11,
+			symbols.T_13, 
+			symbols.T_14,
 		}, 
 		Package0R1, 
 	},
 	Package0R2: {
 		symbols.NT_Package, 0, 2, 
 		symbols.Symbols{  
-			symbols.T_10, 
-			symbols.T_11,
+			symbols.T_13, 
+			symbols.T_14,
 		}, 
 		Package0R2, 
 	},
@@ -483,6 +537,20 @@ var slots = map[Label]*Slot{
 			symbols.NT_Import,
 		}, 
 		Statement1R1, 
+	},
+	Statement2R0: {
+		symbols.NT_Statement, 2, 0, 
+		symbols.Symbols{  
+			symbols.NT_VariableDef,
+		}, 
+		Statement2R0, 
+	},
+	Statement2R1: {
+		symbols.NT_Statement, 2, 1, 
+		symbols.Symbols{  
+			symbols.NT_VariableDef,
+		}, 
+		Statement2R1, 
 	},
 	Statements0R0: {
 		symbols.NT_Statements, 0, 0, 
@@ -525,16 +593,132 @@ var slots = map[Label]*Slot{
 	String0R0: {
 		symbols.NT_String, 0, 0, 
 		symbols.Symbols{  
-			symbols.T_11,
+			symbols.T_14,
 		}, 
 		String0R0, 
 	},
 	String0R1: {
 		symbols.NT_String, 0, 1, 
 		symbols.Symbols{  
-			symbols.T_11,
+			symbols.T_14,
 		}, 
 		String0R1, 
+	},
+	Variable0R0: {
+		symbols.NT_Variable, 0, 0, 
+		symbols.Symbols{  
+			symbols.T_9,
+		}, 
+		Variable0R0, 
+	},
+	Variable0R1: {
+		symbols.NT_Variable, 0, 1, 
+		symbols.Symbols{  
+			symbols.T_9,
+		}, 
+		Variable0R1, 
+	},
+	VariableDef0R0: {
+		symbols.NT_VariableDef, 0, 0, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_4, 
+			symbols.NT_Data,
+		}, 
+		VariableDef0R0, 
+	},
+	VariableDef0R1: {
+		symbols.NT_VariableDef, 0, 1, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_4, 
+			symbols.NT_Data,
+		}, 
+		VariableDef0R1, 
+	},
+	VariableDef0R2: {
+		symbols.NT_VariableDef, 0, 2, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_4, 
+			symbols.NT_Data,
+		}, 
+		VariableDef0R2, 
+	},
+	VariableDef0R3: {
+		symbols.NT_VariableDef, 0, 3, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_4, 
+			symbols.NT_Data,
+		}, 
+		VariableDef0R3, 
+	},
+	VariableDef1R0: {
+		symbols.NT_VariableDef, 1, 0, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R0, 
+	},
+	VariableDef1R1: {
+		symbols.NT_VariableDef, 1, 1, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R1, 
+	},
+	VariableDef1R2: {
+		symbols.NT_VariableDef, 1, 2, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R2, 
+	},
+	VariableDef1R3: {
+		symbols.NT_VariableDef, 1, 3, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R3, 
+	},
+	VariableDef1R4: {
+		symbols.NT_VariableDef, 1, 4, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R4, 
+	},
+	VariableDef1R5: {
+		symbols.NT_VariableDef, 1, 5, 
+		symbols.Symbols{  
+			symbols.T_9, 
+			symbols.T_3, 
+			symbols.T_9, 
+			symbols.T_5, 
+			symbols.NT_Data,
+		}, 
+		VariableDef1R5, 
 	},
 }
 
@@ -547,6 +731,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Data,2,1 }: Data2R1,
 	Index{ symbols.NT_Data,3,0 }: Data3R0,
 	Index{ symbols.NT_Data,3,1 }: Data3R1,
+	Index{ symbols.NT_Data,4,0 }: Data4R0,
+	Index{ symbols.NT_Data,4,1 }: Data4R1,
 	Index{ symbols.NT_DataList,0,0 }: DataList0R0,
 	Index{ symbols.NT_DataList,0,1 }: DataList0R1,
 	Index{ symbols.NT_DataList,1,0 }: DataList1R0,
@@ -558,6 +744,10 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_FuncCall,0,2 }: FuncCall0R2,
 	Index{ symbols.NT_FuncCall,0,3 }: FuncCall0R3,
 	Index{ symbols.NT_FuncCall,0,4 }: FuncCall0R4,
+	Index{ symbols.NT_FuncCall,1,0 }: FuncCall1R0,
+	Index{ symbols.NT_FuncCall,1,1 }: FuncCall1R1,
+	Index{ symbols.NT_FuncCall,1,2 }: FuncCall1R2,
+	Index{ symbols.NT_FuncCall,1,3 }: FuncCall1R3,
 	Index{ symbols.NT_Import,0,0 }: Import0R0,
 	Index{ symbols.NT_Import,0,1 }: Import0R1,
 	Index{ symbols.NT_Import,0,2 }: Import0R2,
@@ -567,10 +757,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Number,1,1 }: Number1R1,
 	Index{ symbols.NT_Operation,0,0 }: Operation0R0,
 	Index{ symbols.NT_Operation,0,1 }: Operation0R1,
-	Index{ symbols.NT_Operation,1,0 }: Operation1R0,
-	Index{ symbols.NT_Operation,1,1 }: Operation1R1,
-	Index{ symbols.NT_Operation,1,2 }: Operation1R2,
-	Index{ symbols.NT_Operation,1,3 }: Operation1R3,
+	Index{ symbols.NT_Operation,0,2 }: Operation0R2,
+	Index{ symbols.NT_Operation,0,3 }: Operation0R3,
 	Index{ symbols.NT_Orion,0,0 }: Orion0R0,
 	Index{ symbols.NT_Orion,0,1 }: Orion0R1,
 	Index{ symbols.NT_Orion,0,2 }: Orion0R2,
@@ -581,6 +769,8 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Statement,0,1 }: Statement0R1,
 	Index{ symbols.NT_Statement,1,0 }: Statement1R0,
 	Index{ symbols.NT_Statement,1,1 }: Statement1R1,
+	Index{ symbols.NT_Statement,2,0 }: Statement2R0,
+	Index{ symbols.NT_Statement,2,1 }: Statement2R1,
 	Index{ symbols.NT_Statements,0,0 }: Statements0R0,
 	Index{ symbols.NT_Statements,0,1 }: Statements0R1,
 	Index{ symbols.NT_Statements,1,0 }: Statements1R0,
@@ -588,19 +778,33 @@ var slotIndex = map[Index]Label {
 	Index{ symbols.NT_Statements,1,2 }: Statements1R2,
 	Index{ symbols.NT_String,0,0 }: String0R0,
 	Index{ symbols.NT_String,0,1 }: String0R1,
+	Index{ symbols.NT_Variable,0,0 }: Variable0R0,
+	Index{ symbols.NT_Variable,0,1 }: Variable0R1,
+	Index{ symbols.NT_VariableDef,0,0 }: VariableDef0R0,
+	Index{ symbols.NT_VariableDef,0,1 }: VariableDef0R1,
+	Index{ symbols.NT_VariableDef,0,2 }: VariableDef0R2,
+	Index{ symbols.NT_VariableDef,0,3 }: VariableDef0R3,
+	Index{ symbols.NT_VariableDef,1,0 }: VariableDef1R0,
+	Index{ symbols.NT_VariableDef,1,1 }: VariableDef1R1,
+	Index{ symbols.NT_VariableDef,1,2 }: VariableDef1R2,
+	Index{ symbols.NT_VariableDef,1,3 }: VariableDef1R3,
+	Index{ symbols.NT_VariableDef,1,4 }: VariableDef1R4,
+	Index{ symbols.NT_VariableDef,1,5 }: VariableDef1R5,
 }
 
 var alternates = map[symbols.NT][]Label{ 
 	symbols.NT_Orion:[]Label{ Orion0R0 },
 	symbols.NT_Package:[]Label{ Package0R0 },
 	symbols.NT_Statements:[]Label{ Statements0R0,Statements1R0 },
-	symbols.NT_Statement:[]Label{ Statement0R0,Statement1R0 },
-	symbols.NT_FuncCall:[]Label{ FuncCall0R0 },
+	symbols.NT_Statement:[]Label{ Statement0R0,Statement1R0,Statement2R0 },
+	symbols.NT_FuncCall:[]Label{ FuncCall0R0,FuncCall1R0 },
 	symbols.NT_Import:[]Label{ Import0R0 },
+	symbols.NT_VariableDef:[]Label{ VariableDef0R0,VariableDef1R0 },
 	symbols.NT_DataList:[]Label{ DataList0R0,DataList1R0 },
-	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0,Data3R0 },
+	symbols.NT_Data:[]Label{ Data0R0,Data1R0,Data2R0,Data3R0,Data4R0 },
 	symbols.NT_String:[]Label{ String0R0 },
 	symbols.NT_Number:[]Label{ Number0R0,Number1R0 },
-	symbols.NT_Operation:[]Label{ Operation0R0,Operation1R0 },
+	symbols.NT_Variable:[]Label{ Variable0R0 },
+	symbols.NT_Operation:[]Label{ Operation0R0 },
 }
 

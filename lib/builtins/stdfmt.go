@@ -23,23 +23,25 @@ import (
 	"strings"
 
 	"github.com/Solarcode-org/Orion/ast"
-	"github.com/Solarcode-org/Orion/lib"
 )
 
-// add_fmt_mod adds the standard input/output module ("fmt"), along with the
+// addFmt adds the standard input/output module ("fmt"), along with the
 // Print, Println and Input functions.
-func add_fmt_mod(functions FunctionsType) {
+func addFmt(functions FunctionsType) {
 	functions["Println"] = fmt_println
 	functions["Print"] = fmt_print
 	functions["Input"] = fmt_input
-	functions["fmt/Println"] = fmt_println
-	functions["fmt/Print"] = fmt_print
-	functions["fmt/Input"] = fmt_input
-	functions["fmt/Join"] = fmt_join
+	functions["fmt.Println"] = fmt_println
+	functions["fmt.Print"] = fmt_print
+	functions["fmt.Input"] = fmt_input
+	functions["fmt.Join"] = fmt_join
 }
 
 func fmt_print(data []*ast.Expr) (ast.Expr, error) {
-	args := EvalArgs(data)
+	args, err := ParsedArgs(data)
+	if err != nil {
+		return ast.Expr{}, err
+	}
 
 	for i := 0; i < len(args); i++ {
 		datum := args[i]
@@ -52,7 +54,10 @@ func fmt_print(data []*ast.Expr) (ast.Expr, error) {
 }
 
 func fmt_println(data []*ast.Expr) (ast.Expr, error) {
-	args := EvalArgs(data)
+	args, err := ParsedArgs(data)
+	if err != nil {
+		return ast.Expr{}, err
+	}
 
 	for i := 0; i < len(args); i++ {
 		datum := args[i]
@@ -68,8 +73,13 @@ func fmt_println(data []*ast.Expr) (ast.Expr, error) {
 }
 
 func fmt_input(data []*ast.Expr) (ast.Expr, error) {
-	args := EvalArgs(data)
-	lib.ExactArgs("input", args, 1)
+	args, err := ParsedArgs(data)
+	if err != nil {
+		return ast.Expr{}, err
+	}
+	if err = checkIfExactArgs(args, 1); err != nil {
+		return ast.Expr{}, err
+	}
 
 	if args[0].Type == ast.Expr_String {
 		reader := bufio.NewReader(os.Stdin)
@@ -88,11 +98,14 @@ func fmt_input(data []*ast.Expr) (ast.Expr, error) {
 		}, nil
 	}
 
-	return ast.Expr{}, fmt.Errorf("input: expected prompt to be of type string")
+	return ast.Expr{}, fmt.Errorf("expected prompt to be of type string")
 }
 
 func fmt_join(data []*ast.Expr) (ast.Expr, error) {
-	args := EvalArgs(data)
+	args, err := ParsedArgs(data)
+	if err != nil {
+		return ast.Expr{}, err
+	}
 	joined := ""
 
 	for i := 0; i < len(data); i++ {

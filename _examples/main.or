@@ -3,12 +3,13 @@ In this program we will:
     * greet the user
     * ask them how they're doing
     * say 'hihello'
+    * print some calculations
+    * use variables to reuse values
 */
 
 package "_examples/main"
 
-get "fmt" ; gets the formatting module
-get "math" ; gets the math module
+get "fmt", "math" ; gets the formatting and math modules
 
 Println("Hi", "user!"); greet the user
 
@@ -27,3 +28,15 @@ Println("0.1 / 3.0 =", 0.1 / 3.0)   ; say 0.1 / 3.0 ( 0.0333333333333333...)
 Println("0.567854 rounded to nearest whole number =", Round(0.567854)) ; 1
 Println("2.05 rounded to upper whole number =", Ceil(2.05)) ; 3
 Println("2.05 rounded to lower whole number =", Floor(2.05)) ; 2
+
+;; Variables
+
+hi := "hello"                   ; Creates a variable named 'hi' with value "hello"
+Println(hi)                     ; Prints it
+Println("verbosity:", @verbose) ; Prints the verbosity level (built-in runtime variable)
+
+a: number = "1"                 ; Converts the string "1" to the number
+Println("a:", a)
+
+b := a + 1                      ; Adds the variable `a` to 1 and assigns to `b`
+Println("b:", b)

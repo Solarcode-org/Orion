@@ -18,23 +18,47 @@ limitations under the License.
 // It contains all of the built-in functions, variables, types, etc. of Orion.
 package builtins
 
-import "github.com/Solarcode-org/Orion/ast"
+import (
+	"fmt"
+
+	"github.com/Solarcode-org/Orion/ast"
+)
 
 // A FunctionsType is a map of all functions ([OrionFunction]) in Orion.
 type FunctionsType = map[string]OrionFunction
 
+// A VariablesType is a map of all variables ([OrionVar]) in Orion.
+type VariablesType = map[string]OrionVar
+
 // An OrionFunction represents a function in Orion.
 type OrionFunction = func([]*ast.Expr) (ast.Expr, error)
 
-// Functions map containing all functions in Orion
+// An OrionVar represents a variable in Orion.
+type OrionVar = ast.Expr
+
+// Functions map containing all functions in Orion.
 var Functions FunctionsType
+
+// Variables map containing all variables in Orion.
+var Variables VariablesType
 
 // Initialize the functions map for use.
 // NOTE: This must be called before any usage of the [Functions] variable.
 func MakeFunctions() {
 	Functions = make(FunctionsType)
 
-	add_fmt_mod(Functions)
-	add_modgetter(Functions)
-	add_arithmetic_mod(Functions)
+	addFmt(Functions)
+	addModGetter(Functions)
+	addArithmetic(Functions)
+}
+
+// Initialize the variables map for use.
+// NOTE: This must be called before any usage of the [Variables] variable.
+func MakeVariables(verbose uint8) {
+	Variables = make(VariablesType)
+
+	Variables["@verbose"] = ast.Expr{
+		Type: ast.Expr_Number,
+		Id:   fmt.Sprint(verbose),
+	}
 }

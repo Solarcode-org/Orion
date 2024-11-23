@@ -22,6 +22,7 @@ import (
 	"github.com/Solarcode-org/Orion/ast"
 	"github.com/Solarcode-org/Orion/lib"
 	"github.com/Solarcode-org/Orion/lib/builtins"
+	"github.com/Solarcode-org/Orion/utils"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -60,26 +61,29 @@ var iorCmd = &cobra.Command{
 		log.Tracef("started `orion ior` with args %v\n", args)
 
 		contents, err := os.ReadFile(args[0])
-		lib.CheckErr(err)
+		utils.CheckErr(err)
 
 		contents = append(contents, "\n"...)
 
-		astree, errs := lib.GetAbstractSyntaxTree(contents)
+		builtins.MakeFunctions()
+		builtins.MakeVariables(verbose)
 
-		if len(errs) > 0 {
-			lib.FailParse(errs)
+		astree, parseErrs, err := lib.ParsedFrom(contents)
+		if len(parseErrs) > 0 {
+			utils.FailParse(parseErrs)
 		}
+		utils.CheckErr(err)
 
 		log.Tracef("Parsed into Abstract Syntax Tree: %v\n", astree)
-
-		builtins.MakeFunctions()
 
 		for i := 0; i < len(astree); i++ {
 			stmt := astree[i]
 
 			switch stmt.Type {
 			case ast.Expr_FuncCall:
-				lib.RunFunc(*stmt, builtins.Functions)
+				_, err := utils.RunFunc(*stmt, builtins.Functions)
+
+				utils.CheckErr(err)
 			}
 		}
 
