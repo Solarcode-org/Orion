@@ -100,12 +100,10 @@ func Statements(stmt bsr.BSR) []bsr.BSR {
 func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 	switch b.Label.Head() {
 	case symbols.NT_FuncCall:
-		funcParts := b.GetAllNTChildren()
-
 		var rawArgs [][]bsr.BSR
 
-		if len(funcParts) > 0 {
-			rawArgs = funcParts[0][0].GetAllNTChildren()
+		if b.Alternate() == 0 {
+			rawArgs = b.GetNTChildI(2).GetAllNTChildren()
 		}
 
 		args := make([]*ast.Expr, 0, len(rawArgs))
@@ -230,13 +228,11 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 		return Expr(child, nil)
 
 	case symbols.NT_DataList:
-		children := b.GetAllNTChildren()
-
 		args := passed_args
 
-		if len(children) == 2 {
-			datalist := children[0][0].GetAllNTChildren()
-			data := children[1][0]
+		if b.Alternate() == 1 {
+			datalist := b.GetNTChildI(0).GetAllNTChildren()
+			data := b.GetNTChildI(1)
 
 			for i := 0; i < len(datalist); i++ {
 				datum := datalist[i][0]
@@ -261,7 +257,7 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 			args = append(args, arg)
 
 		} else {
-			arg, err := Expr(children[0][0], args)
+			arg, err := Expr(b.GetNTChildrenI(0)[0], args)
 			if err != nil {
 				return nil, err
 			}
@@ -275,6 +271,36 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 
 	case symbols.NT_VariableDef:
 		varName := b.GetTChildI(0).LiteralString()
+
+		if b.Alternate() == 1 {
+			value, err := Expr(b.GetNTChildI(4), nil)
+			if err != nil {
+				return nil, err
+			}
+
+			varType := b.GetTChildI(2).LiteralString()
+
+			switch varType {
+			case "string":
+				builtins.Variables[varName] = ast.Expr{
+					Type: ast.Expr_String,
+					Id:   value.Id,
+				}
+
+			case "number":
+				if _, err := strconv.Atoi(value.Id); err != nil {
+					return nil, err
+				}
+
+				builtins.Variables[varName] = ast.Expr{
+					Type: ast.Expr_Number,
+					Id:   value.Id,
+				}
+			}
+
+			return &ast.Expr{}, nil
+		}
+
 		value := b.GetNTChildI(2)
 
 		valueParsed, err := Expr(value, nil)
@@ -290,7 +316,6 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 		varName := b.GetTChildI(0).LiteralString()
 
 		if value, ok := builtins.Variables[varName]; ok {
-			log.Debugf("%+#v\n", value)
 			return &value, nil
 		} else {
 			return nil, fmt.Errorf("could not find name: %s", varName)

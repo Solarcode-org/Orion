@@ -34,3 +34,9 @@ Println("2.05 rounded to lower whole number =", Floor(2.05)) ; 2
 hi := "hello"                   ; Creates a variable named 'hi' with value "hello"
 Println(hi)                     ; Prints it
 Println("verbosity:", @verbose) ; Prints the verbosity level (built-in runtime variable)
+
+a: number = "1"                 ; Converts the string "1" to the number
+Println("a:", a)
+
+b := a + 1                      ; Adds the variable `a` to 1 and assigns to `b`
+Println("b:", b)

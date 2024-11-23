@@ -31,10 +31,10 @@ func addFmt(functions FunctionsType) {
 	functions["Println"] = fmt_println
 	functions["Print"] = fmt_print
 	functions["Input"] = fmt_input
-	functions["fmt/Println"] = fmt_println
-	functions["fmt/Print"] = fmt_print
-	functions["fmt/Input"] = fmt_input
-	functions["fmt/Join"] = fmt_join
+	functions["fmt.Println"] = fmt_println
+	functions["fmt.Print"] = fmt_print
+	functions["fmt.Input"] = fmt_input
+	functions["fmt.Join"] = fmt_join
 }
 
 func fmt_print(data []*ast.Expr) (ast.Expr, error) {

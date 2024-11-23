@@ -30,7 +30,7 @@ func addModGetter(functions FunctionsType) {
 			module := data[i]
 
 			if module.Type != ast.Expr_String /* && module.Type != ast.Ident */ {
-				return ast.Expr{}, fmt.Errorf("expected string or identifier as module arguments")
+				return ast.Expr{}, fmt.Errorf("expected string as module arguments")
 			}
 
 			keys := make([]string, 0, len(functions))
@@ -39,8 +39,8 @@ func addModGetter(functions FunctionsType) {
 			}
 
 			for _, key := range keys {
-				if strings.Split(key, "/")[0] == module.Id {
-					functions[strings.Split(key, "/")[1]] = functions[key]
+				if strings.Split(key, ".")[0] == module.Id {
+					functions[strings.Split(key, ".")[1]] = functions[key]
 				}
 			}
 		}

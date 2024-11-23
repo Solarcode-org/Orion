@@ -10,3 +10,6 @@ dist/
 # Completions and manpages
 completions/
 manpages/
+
+# MacOS
+.DS_Store

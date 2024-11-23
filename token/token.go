@@ -138,16 +138,18 @@ const(
     T_0  // ( 
     T_1  // ) 
     T_2  // , 
-    T_3  // := 
-    T_4  // block_comment 
-    T_5  // float 
-    T_6  // get 
-    T_7  // ident 
-    T_8  // integer 
-    T_9  // line_comment 
-    T_10  // op 
-    T_11  // package 
-    T_12  // string_lit 
+    T_3  // : 
+    T_4  // := 
+    T_5  // = 
+    T_6  // block_comment 
+    T_7  // float 
+    T_8  // get 
+    T_9  // ident 
+    T_10  // integer 
+    T_11  // line_comment 
+    T_12  // op 
+    T_13  // package 
+    T_14  // string_lit 
 )
 
 var TypeToString = []string{ 
@@ -166,6 +168,8 @@ var TypeToString = []string{
     "T_10",
     "T_11",
     "T_12",
+    "T_13",
+    "T_14",
 }
 
 var StringToType = map[string] Type { 
@@ -184,6 +188,8 @@ var StringToType = map[string] Type {
     "T_10" : T_10, 
     "T_11" : T_11, 
     "T_12" : T_12, 
+    "T_13" : T_13, 
+    "T_14" : T_14, 
 }
 
 var TypeToID = []string { 
@@ -192,7 +198,9 @@ var TypeToID = []string {
     "(", 
     ")", 
     ",", 
+    ":", 
     ":=", 
+    "=", 
     "block_comment", 
     "float", 
     "get", 
@@ -210,19 +218,23 @@ var IDToType = map[string]Type {
     "(": 2, 
     ")": 3, 
     ",": 4, 
-    ":=": 5, 
-    "block_comment": 6, 
-    "float": 7, 
-    "get": 8, 
-    "ident": 9, 
-    "integer": 10, 
-    "line_comment": 11, 
-    "op": 12, 
-    "package": 13, 
-    "string_lit": 14, 
+    ":": 5, 
+    ":=": 6, 
+    "=": 7, 
+    "block_comment": 8, 
+    "float": 9, 
+    "get": 10, 
+    "ident": 11, 
+    "integer": 12, 
+    "line_comment": 13, 
+    "op": 14, 
+    "package": 15, 
+    "string_lit": 16, 
 }
 
 var Suppress = []bool { 
+    false, 
+    false, 
     false, 
     false, 
     false, 

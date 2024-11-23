@@ -30,13 +30,13 @@ func addArithmetic(functions FunctionsType) {
 	functions["Difference"] = math_difference
 	functions["Product"] = math_product
 	functions["Quotient"] = math_quotient
-	functions["math/Sum"] = math_sum
-	functions["math/Difference"] = math_difference
-	functions["math/Product"] = math_product
-	functions["math/Quotient"] = math_quotient
-	functions["math/Round"] = math_round
-	functions["math/Ceil"] = math_ceil
-	functions["math/Floor"] = math_floor
+	functions["math.Sum"] = math_sum
+	functions["math.Difference"] = math_difference
+	functions["math.Product"] = math_product
+	functions["math.Quotient"] = math_quotient
+	functions["math.Round"] = math_round
+	functions["math.Ceil"] = math_ceil
+	functions["math.Floor"] = math_floor
 }
 
 func math_sum(data []*ast.Expr) (ast.Expr, error) {

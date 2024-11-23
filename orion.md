@@ -123,12 +123,15 @@ Import : "get" DataList ;
 
 It represents a variable definition.
 A variable declaration statement is in the form:
-<blockquote>variableName = value</blockquote>
-<!-- or
-<blockquote>variableName type = value</blockquote> -->
+<blockquote>variableName := value</blockquote>
+or
+<blockquote>variableName: type = value</blockquote>
 
 ```
-VariableDef : ident ":=" Data ;
+VariableDef
+        : ident ":=" Data
+        | ident ":" ident "=" Data
+        ;
 ```
 
 ## The DataList Rule
@@ -181,7 +184,6 @@ It represents all the operations in Orion.
 
 ```
 Operation 
-        : Number
-        | Operation op Number
+        : Data op Data
         ;
 ```
