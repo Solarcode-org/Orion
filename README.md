@@ -1,6 +1,6 @@
 # Orion
 
-Orion is a general-purpose toy programming language. It is inspired by, and made in, Go. Orion is designed to be simple and easy to learn for beginners, while also being powerful enough for advanced users. Although currently it only supports functions, arithmetic functions, and modules, I hope I can add more features as this project grows. For example, I plan to include support for variables, object-oriented programming, and user-defined data types.
+Orion is a general-purpose toy programming language. It is inspired by, and made in, Go. Orion is designed to be simple and easy to learn for beginners, while also being powerful enough for advanced users. Although currently it only supports functions, arithmetic functions, variables and modules, I hope I can add more features as this project grows. For example, I plan to include support for object-oriented programming and user-defined data types.
 
 ## Copyright
 
