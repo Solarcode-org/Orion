@@ -25,6 +25,9 @@ const (
 	Expr_String ExprType = iota
 	Expr_FuncCall
 	Expr_Number
+	Expr_Variable
+	Expr_VariableDef
+	Expr_VariableTypeDef
 )
 
 // An Expr represents an expression in Orion.
