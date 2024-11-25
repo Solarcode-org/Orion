@@ -40,3 +40,11 @@ Println("a:", a)
 
 b := a + 1                      ; Adds the variable `a` to 1 and assigns to `b`
 Println("b:", b)
+
+userNumStr := Input("Enter any number: ")   ; User enters number as string
+userNum: number = userNumStr                ; Variable type casting
+
+/* or just */ userNum2: number = Input("Enter second number: ")  ; User enters second number as number.
+num3 := userNum + userNum2
+Println("num3:", num3)  ; It works!
+

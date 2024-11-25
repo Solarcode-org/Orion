@@ -282,23 +282,19 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 
 			switch varType {
 			case "string":
-				builtins.Variables[varName] = ast.Expr{
-					Type: ast.Expr_String,
-					Id:   value.Id,
-				}
+				return &ast.Expr{
+					Type: ast.Expr_VariableTypeDef,
+					Id:   varName,
+					Args: []*ast.Expr{value, {Type: ast.Expr_String}},
+				}, nil
 
 			case "number":
-				if _, err := strconv.Atoi(value.Id); err != nil {
-					return nil, err
-				}
-
-				builtins.Variables[varName] = ast.Expr{
-					Type: ast.Expr_Number,
-					Id:   value.Id,
-				}
+				return &ast.Expr{
+					Type: ast.Expr_VariableTypeDef,
+					Id:   varName,
+					Args: []*ast.Expr{value, {Type: ast.Expr_Number}},
+				}, nil
 			}
-
-			return &ast.Expr{}, nil
 		}
 
 		value := b.GetNTChildI(2)
@@ -308,9 +304,11 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 			return nil, err
 		}
 
-		builtins.Variables[varName] = *valueParsed
-
-		return &ast.Expr{}, nil
+		return &ast.Expr{
+			Type: ast.Expr_VariableDef,
+			Id:   varName,
+			Args: []*ast.Expr{valueParsed},
+		}, nil
 
 	case symbols.NT_Variable:
 		varName := b.GetTChildI(0).LiteralString()
@@ -318,7 +316,10 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 		if value, ok := builtins.Variables[varName]; ok {
 			return &value, nil
 		} else {
-			return nil, fmt.Errorf("could not find name: %s", varName)
+			return &ast.Expr{
+				Type: ast.Expr_Variable,
+				Id:   varName,
+			}, nil
 		}
 
 	default:
