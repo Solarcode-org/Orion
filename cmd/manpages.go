@@ -23,12 +23,11 @@ import (
 	"github.com/spf13/cobra/doc"
 )
 
-var path string
+var manpagesPath string
 
 /*
 Generate manpages for Orion.
 
-Cobra is a CLI library for Go that empowers applications.
 Specifiy the '-P' flag to generate manpages in custom directory (default=./manpages/)
 
 Usage:
@@ -36,8 +35,8 @@ Usage:
 	orion manpages [flags]
 
 Examples:
-# Generate manpages in default directory.
 
+	# Generate manpages in default directory.
 	$ orion manpages
 
 	# Generate manpages in foo directory
@@ -46,21 +45,21 @@ Examples:
 Flags:
 
 	-h, --help          help for manpages
-	-P, --path string   Custom directory to generate manpages in (default "./manpages")
+	-P, --path string   Custom directory to generate manpages in (default $PWD/manpages)
 
 Global Flags:
 
-	    --config string    config file (default is $HOME/.orion.yaml)
-	-v, --verbose uint32   config file (default is $HOME/.Orion.yaml)
+	    --config string   config file (default is $HOME/.orion.yaml)
+	-v, --verbose uint8   verbosity level
 */
 var manpagesCmd = &cobra.Command{
-	Use:   "manpages",
+	Use:   "manpages [-P path]",
 	Short: "Generate manpages for Orion",
 	Long: `Generate manpages for Orion.
 
-Cobra is a CLI library for Go that empowers applications.
 Specifiy the '-P' flag to generate manpages in custom directory (default=./manpages/)`,
-	Example: `# Generate manpages in default directory.
+	Example: `
+	# Generate manpages in default directory.
 	$ orion manpages
 	
 	# Generate manpages in foo directory
@@ -73,7 +72,7 @@ Specifiy the '-P' flag to generate manpages in custom directory (default=./manpa
 			Section: "1",
 			Date:    &now,
 		}
-		cobra.CheckErr(doc.GenManTree(cmd.Root(), header, path))
+		cobra.CheckErr(doc.GenManTree(cmd.Root(), header, manpagesPath))
 	},
 }
 
@@ -88,5 +87,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	manpagesCmd.Flags().StringVarP(&path, "path", "P", "./manpages", "Custom directory to generate manpages in")
+	manpagesCmd.Flags().StringVarP(&manpagesPath, "path", "P", "./manpages", "Custom directory to generate manpages in")
 }

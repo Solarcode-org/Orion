@@ -33,7 +33,7 @@ const (
 // An Expr represents an expression in Orion.
 // The zero value for Expr is an empty expression i.e the "nil" value.
 type Expr struct {
-	Type ExprType // The type of this expression [ExprType].
-	Id   string   // Either the value of any data or the name of a function.
-	Args []*Expr  // If this is a function or argument list, this is filled.
+	Type ExprType `json:"type,omitempty"` // The type of this expression [ExprType].
+	Id   string   `json:"id,omitempty"`   // Either the value of any data or the name of a function.
+	Args []*Expr  `json:"args,omitempty"` // If this is a function or argument list, this is filled.
 }

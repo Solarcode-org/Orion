@@ -39,6 +39,16 @@ tasks:
     cmd: "go run . ior {{.FILE}}"
     interactive: true
 
+  encode:
+    deps:
+      - grammar
+    cmd: "go run . encode {{.FILE}}"
+  
+  encode_verbose:
+    deps:
+      - grammar_verbose
+    cmd: "go run . encode {{.FILE}} -v5"
+
   test:
     deps:
       - grammar

@@ -1,0 +1,4 @@
+package "_examples/simple"
+
+world := "world"
+Println("Hello", world)

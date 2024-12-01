@@ -24,7 +24,6 @@ import (
 	"github.com/Solarcode-org/Orion/lexer"
 	"github.com/Solarcode-org/Orion/lib/builtins"
 	"github.com/Solarcode-org/Orion/parser"
-	"github.com/Solarcode-org/Orion/utils"
 
 	log "github.com/sirupsen/logrus"
 
@@ -158,7 +157,9 @@ func Expr(b bsr.BSR, passed_args []*ast.Expr) (*ast.Expr, error) {
 	case symbols.NT_String:
 		quoted := b.GetTChildI(0).LiteralString()
 		str, err := strconv.Unquote(quoted)
-		utils.CheckErr(err)
+		if err != nil {
+			return nil, err
+		}
 
 		return &ast.Expr{
 			Type: ast.Expr_String,
