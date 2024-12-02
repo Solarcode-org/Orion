@@ -9,6 +9,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// RunAST evaluates an Abstract Syntax Tree.
 func RunAST(astree []*ast.Expr) {
 	for i := 0; i < len(astree); i++ {
 		stmt := astree[i]

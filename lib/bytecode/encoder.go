@@ -7,6 +7,8 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// EncodedSyntaxTree returns bytecode instructions for the given
+// Abstract Syntax Tree.
 func EncodedSyntaxTree(astree []*ast.Expr) (Instructions, error) {
 	bytecode := Instructions{}
 

@@ -8,6 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// DecodedSyntaxTree returns an Abstract Syntax Tree by decoding the
+// bytecode instructions.
 func DecodedSyntaxTree(instructions Instructions) ([]*ast.Expr, error) {
 	astree := []*ast.Expr{}
 	skip := 0
@@ -35,6 +37,7 @@ func DecodedSyntaxTree(instructions Instructions) ([]*ast.Expr, error) {
 	return astree, nil
 }
 
+// decodedExpr converts instructions into expressions.
 func decodedExpr(instructions Instructions, i int) (expr *ast.Expr, skip int, err error) {
 	switch Instruction(instructions[i]) {
 	case Func:
