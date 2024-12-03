@@ -17,47 +17,54 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/Solarcode-org/Orion/lib"
 	"github.com/Solarcode-org/Orion/lib/builtins"
+	"github.com/Solarcode-org/Orion/lib/bytecode"
 	"github.com/Solarcode-org/Orion/utils"
-	"github.com/Solarcode-org/Orion/utils/astrunner"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 /*
-Run an individual Orion source file.
+Encode a parsed Orion file into bytecode.
+
+This is really useful for just storing the
+syntax tree for later use in the form of cache.
 
 Usage:
 
-	orion ior [flags]
+	orion encode [flags]
 
 Examples:
 
-	# Run foo.or
-	$ orion ior foo.or
+	# Encode file "foo.or"
+	orion encode foo.or
 
 Flags:
 
-	-h, --help   help for ior
+	-h, --help   help for encode
 
 Global Flags:
 
 	    --config string   config file (default is $HOME/.orion.yaml)
 	-v, --verbose uint8   verbosity level
 */
-var iorCmd = &cobra.Command{
-	Use:   "ior file",
-	Short: "Run an individual Orion source file",
-	Long:  `Run an individual Orion source file.`,
-	Example: `
-	# Run foo.or
-	$ orion ior foo.or`,
+var encodeCmd = &cobra.Command{
+	Use:   "encode file",
+	Short: "Encode a parsed Orion file into bytecode",
+	Long: `Encode a parsed Orion file into bytecode.
 
-	PreRun: toggleDebug,
+This is really useful for just storing the
+syntax tree for later use in the form of cache.`,
+	Example: `
+	# Encode file "foo.or"
+	orion encode foo.or
+`,
 	Args:   cobra.ExactArgs(1),
+	PreRun: toggleDebug,
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Tracef("started `orion ior` with args %v\n", args)
 
@@ -75,24 +82,41 @@ var iorCmd = &cobra.Command{
 		}
 		utils.CheckErr(err)
 
-		log.Tracef("Parsed into Abstract Syntax Tree: %v\n", astree)
+		log.Tracef("Parsed into Abstract Syntax Tree: %+#v\n", astree)
 
-		astrunner.RunAST(astree)
+		instructions, err := bytecode.EncodedSyntaxTree(astree)
+		utils.CheckErr(err)
 
-		log.Traceln("ended `orion ior` with exit code 0")
+		astFilePath := fmt.Sprint(args[0], ".ast")
+
+		astFile, err := os.Create(astFilePath)
+
+		if err != nil {
+			astFile.Close()
+			log.Fatalln(err)
+		}
+
+		defer astFile.Close()
+
+		if _, err := astFile.Write(instructions); err != nil {
+			astFile.Close()
+			log.Fatalln(err)
+		}
+
+		log.Traceln("ended `orion encode` with exit code 0")
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(iorCmd)
+	RootCmd.AddCommand(encodeCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// iorCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// encodeCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// iorCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// encodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

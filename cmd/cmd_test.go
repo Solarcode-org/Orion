@@ -23,14 +23,14 @@ import (
 	"github.com/Solarcode-org/Orion/cmd"
 )
 
-// TestIor tests the help flag
+// TestIor tests the benchmarking example.
 func TestIor(t *testing.T) {
-	cmd.RootCmd.SetArgs([]string{"ior", "--help"})
+	cmd.RootCmd.SetArgs([]string{"ior", "../_examples/bench.or"})
 	cmd.Execute()
 }
 
-// BenchmarkExample measures the performance of the benchmarking example ([_examples/bench.or])
-func BenchmarkExample(b *testing.B) {
+// BenchmarkIor measures the performance of the benchmarking example ([_examples/bench.or]).
+func BenchmarkIor(b *testing.B) {
 	cmd.RootCmd.SetArgs([]string{"ior", "../_examples/bench.or"})
 
 	for i := 0; i < b.N; i++ {

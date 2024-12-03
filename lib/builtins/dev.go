@@ -42,6 +42,16 @@ func ParsedArgs(data []*ast.Expr) ([]*ast.Expr, error) {
 			continue
 		}
 
+		if datum.Type == ast.Expr_Variable {
+			if value, ok := Variables[datum.Id]; ok {
+				args = append(args, &value)
+			} else {
+				return nil, fmt.Errorf("could not find name: %s", datum.Id)
+			}
+
+			continue
+		}
+
 		args = append(args, datum)
 	}
 

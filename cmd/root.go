@@ -49,15 +49,18 @@ Usage:
 Available Commands:
 
 	completion  Generate the autocompletion script for the specified shell
+	encode      Encode a parsed Orion file into bytecode
 	help        Help about any command
 	ior         Run an individual Orion source file
 	manpages    Generate manpages for Orion
+	new         Make a new Orion project
+	run         Run an Orion project
 
 Flags:
 
 	    --config string   config file (default is $HOME/.orion.yaml)
 	-h, --help            help for orion
-	-v, --verbose uint8   config file (default is $HOME/.Orion.yaml)
+	-v, --verbose uint8   verbosity level
 
 Use "orion [command] --help" for more information about a command.
 */
@@ -70,7 +73,6 @@ The Orion programming language was invented in 2024 by
 Arnab Phukan. It was made to combine the speed of Go,
 security of Rust and efficiency of Python. It is a
 compiled language.`,
-	PreRun: toggleDebug,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -93,7 +95,7 @@ func init() {
 	// will be global for your application.
 
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.orion.yaml)")
-	RootCmd.PersistentFlags().Uint8VarP(&verbose, "verbose", "v", 0, "config file (default is $HOME/.Orion.yaml)")
+	RootCmd.PersistentFlags().Uint8VarP(&verbose, "verbose", "v", 0, "verbosity level")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

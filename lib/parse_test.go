@@ -46,14 +46,18 @@ func TestParsePackageOnly(t *testing.T) {
 // validFile contains the contents for a perfectly valid but minimal file.
 var validFile = []byte(`
 package "__testing/untitled"
-Println("Hello,", "world")
+world := "world"
+one: number = "1"
+Println("Hello", world)
+Println(one + 1)
+Println(one / 1)
 `)
 
 // TestParseValid tries to parse [validFile].
 func TestParseValid(t *testing.T) {
 	_, parseErrs, err := lib.ParsedFrom(validFile)
 	if len(parseErrs) > 0 {
-		t.Log("Parse errors:")
+		t.Log("parse errors:")
 
 		ln := parseErrs[0].Line
 		for _, err := range parseErrs {
@@ -61,7 +65,8 @@ func TestParseValid(t *testing.T) {
 				t.Log("  ", err)
 			}
 		}
-		t.FailNow()
+
+		t.Fail()
 	}
 	if err != nil {
 		t.Error(err)
